@@ -1,0 +1,215 @@
+diff -Nru lms.org/index.php lms/index.php
+--- lms.org/index.php	2014-05-15 10:50:25.000000000 +0200
++++ lms/index.php	2014-07-17 14:43:30.541581000 +0200
+@@ -159,6 +159,24 @@
+ $LMS->ui_lang = $_ui_language;
+ $LMS->lang = $_language;
+ 
++// -- GPON DASAN --
++// Dodanie klasy GPON'a
++if (chkconfig(ConfigHelper::checkConfig('phpui.gpon')))
++{
++       if(!empty($CONFIG['directories']['lib_dir']))
++       {
++               if(file_exists($CONFIG['directories']['lib_dir'].'/gpon/GPON.menu.php') && file_exists($CONFIG['directories']['lib_dir'].'/gpon/GPON.class.php'))
++               {
++                       require_once(LIB_DIR.'/gpon/GPON.class.php');
++                       $GPON = new GPON($DB, $AUTH, $CONFIG);
++               }
++       }
++}
++$SMARTY->assignByRef('_phpui_gpon',$CONFIG['phpui']['gpon']);
++$CONFIG['directories']['rrd_dir'] = (!isset($CONFIG['directories']['rrd_dir']) ? $CONFIG['directories']['sys_dir'].'/rrd' : $CONFIG['directories']['rrd_dir']);
++define('RRD_DIR', $CONFIG['directories']['rrd_dir']);
++// -- GPON --
++
+ // Initialize Swekey class
+ 
+ if (chkconfig($CONFIG['phpui']['use_swekey'])) {
+diff -Nru lms.org/lib/accesstable.php lms/lib/accesstable.php
+--- lms.org/lib/accesstable.php	2014-05-15 10:50:25.000000000 +0200
++++ lms/lib/accesstable.php	2014-07-17 14:12:48.001581000 +0200
+@@ -121,6 +121,18 @@
+ $access['table'][29]['allow_reg']	= '^archive(info|view)$';
+ $access['table'][29]['privilege']	= 'transaction_logs';
+ 
++$access['table'][31]['name']            = 'GPON - zarządzanie modułem';
++$access['table'][31]['allow_reg']       = '^gpon.*$';
++
++$access['table'][32]['name']            = 'GPON - podgląd infrormacji';
++$access['table'][32]['allow_reg']       = '^((gponolt|gpononu|gpononumodels)(info|list|search|tvinfo|tvlist|signalimage)|gponoffline)$';
++
++$access['table'][33]['name']            = 'GPON - Autoprovisioning (nowy onu)';
++$access['table'][33]['allow_reg']       = '^(gpononu(add|script|edit|check))$';
++
++$access['table'][34]['name']            = 'GPON - view onu passwords';
++$access['table'][34]['privillege']      = 'view_onu_passwords';
++
+ $access['table'][249]['name']		= trans('backup access forbidden');
+ $access['table'][249]['deny_reg']	= '^db(del|list|new|recover|view)$';
+ 
+diff -Nru lms.org/lib/LMS.class.php lms/lib/LMS.class.php
+--- lms.org/lib/LMS.class.php	2014-05-15 10:50:25.000000000 +0200
++++ lms/lib/LMS.class.php	2014-07-17 14:22:33.033581000 +0200
+@@ -4175,7 +4175,7 @@
+ 			ORDER BY name', array($id, $id, $id, $id, $id));
+ 	}
+ 
+-	public function GetNetDevList($order = 'name,asc') {
++	public function GetNetDevList($order = 'name,asc', $gponolt=0) {
+ 		list($order, $direction) = sscanf($order, '%[^,],%s');
+ 
+ 		($direction == 'desc') ? $direction = 'desc' : $direction = 'asc';
+@@ -4207,12 +4207,17 @@
+ 				break;
+ 		}
+ 
++		$where=' WHERE 1=1 ';
++		if($gponolt==1)
++		{
++			$where.=' AND gponoltid>0';
++		}
+ 		$netdevlist = $this->DB->GetAll('SELECT d.id, d.name, d.location,
+ 			d.description, d.producer, d.model, d.serialnumber, d.ports,
+ 			(SELECT COUNT(*) FROM nodes WHERE netdev=d.id AND ownerid > 0)
+ 			+ (SELECT COUNT(*) FROM netlinks WHERE src = d.id OR dst = d.id)
+-			AS takenports
+-			FROM netdevices d '
++			AS takenports, d.gponoltid
++			FROM netdevices d '.$where
+ 				. ($sqlord != '' ? $sqlord . ' ' . $direction : ''));
+ 
+ 		$netdevlist['total'] = sizeof($netdevlist);
+@@ -4374,15 +4379,16 @@
+ 			'community' => $data['community'],
+ 			'channelid' => !empty($data['channelid']) ? $data['channelid'] : NULL,
+ 			'longitude' => !empty($data['longitude']) ? str_replace(',', '.', $data['longitude']) : NULL,
+-			'latitude' => !empty($data['latitude']) ? str_replace(',', '.', $data['latitude']) : NULL
++			'latitude' => !empty($data['latitude']) ? str_replace(',', '.', $data['latitude']) : NULL,
++			'gponoltid' => $data['gponoltid']
+ 		);
+ 		if ($this->DB->Execute('INSERT INTO netdevices (name, location,
+ 				location_city, location_street, location_house, location_flat,
+ 				description, producer, model, serialnumber,
+ 				ports, purchasetime, guaranteeperiod, shortname,
+ 				nastype, clients, secret, community, channelid,
+-				longitude, latitude)
+-				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', array_values($args))) {
++				longitude, latitude, gponoltid)
++				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', array_values($args))) {
+ 			$id = $this->DB->GetLastInsertID('netdevices');
+ 
+ 			// EtherWerX support (devices have some limits)
+diff -Nru lms.org/lib/menu.php lms/lib/menu.php
+--- lms.org/lib/menu.php	2014-05-15 10:50:25.000000000 +0200
++++ lms/lib/menu.php	2014-07-17 14:24:09.761581000 +0200
+@@ -760,6 +760,19 @@
+ 	if(file_exists($CONFIG['phpui']['custom_menu']))
+ 	        require_once($CONFIG['phpui']['custom_menu']);
+ 
++// -- GPON DASAN --
++if (chkconfig(ConfigHelper::getConfig('phpui.gpon')))
++{
++       if(!empty($CONFIG['directories']['lib_dir']))
++       {
++               if(file_exists($CONFIG['directories']['lib_dir'].'/gpon/GPON.menu.php'))
++               {
++                       require_once($CONFIG['directories']['lib_dir'].'/gpon/GPON.menu.php');
++               }
++       }
++}
++// -- GPON --
++
+ /* Example for custom_menu file
+ <?php
+ 	$menu['config']['submenu'][] = array(
+diff -Nru lms.org/modules/customeredit.php lms/modules/customeredit.php
+--- lms.org/modules/customeredit.php	2014-05-15 10:50:25.000000000 +0200
++++ lms/modules/customeredit.php	2014-07-17 14:25:20.653581000 +0200
+@@ -260,6 +260,7 @@
+ 
+ $customerid = $customerinfo['id'];
+ include(MODULES_DIR.'/customer.inc.php');
++include(MODULES_DIR.'/gpononu.inc.php');
+ 
+ $SMARTY->assign('customerinfo',$customerinfo);
+ $SMARTY->assign('cstateslist',$LMS->GetCountryStates());
+diff -Nru lms.org/modules/customerinfo.php lms/modules/customerinfo.php
+--- lms.org/modules/customerinfo.php	2014-05-15 10:50:25.000000000 +0200
++++ lms/modules/customerinfo.php	2014-07-17 14:24:57.757581000 +0200
+@@ -27,6 +27,7 @@
+ $customerid = intval($_GET['id']);
+ 
+ include(MODULES_DIR.'/customer.inc.php');
++include(MODULES_DIR.'/gpononu.inc.php');
+ 
+ //if($customerinfo['cutoffstop'] > mktime(0,0,0))
+ //        $customerinfo['cutoffstopnum'] = floor(($customerinfo['cutoffstop'] - mktime(23,59,59))/86400);
+diff -Nru lms.org/templates/default/customeredit.html lms/templates/default/customeredit.html
+--- lms.org/templates/default/customeredit.html	2014-05-15 10:50:25.000000000 +0200
++++ lms/templates/default/customeredit.html	2014-07-17 14:27:10.165581000 +0200
+@@ -14,6 +14,13 @@
+ 			{include file="customernodesbox.html"}
+ 		</TD>
+ 	</TR>
++	{if ConfigHelper::checkConfig('phpui.gpon')}
++	<TR>
++		<TD style="width: 100%;">
++			{include file="gpononu.inc.html"}
++		</TD>
++	</TR>
++	{/if}
+ 	{if check_conf('phpui.logging') && (check_conf('privileges.superuser') || check_conf('privileges.transaction_logs'))}
+ 	<TR>
+ 		<TD style="width: 100%;">
+diff -Nru lms.org/templates/default/customerinfo.html lms/templates/default/customerinfo.html
+--- lms.org/templates/default/customerinfo.html	2014-05-15 10:50:25.000000000 +0200
++++ lms/templates/default/customerinfo.html	2014-07-17 14:28:43.657581000 +0200
+@@ -13,6 +13,13 @@
+ 			{include file="customernodesbox.html"}
+ 		</TD>
+ 	</TR>
++        {if ConfigHelper::checkConfig('phpui.gpon')}
++        <TR>
++                <TD style="width: 100%;">
++                        {include file="gpononu.inc.html"}
++                </TD>
++        </TR>
++        {/if}
+ 	{if check_conf('phpui.logging') && (check_conf('privileges.superuser') || check_conf('privileges.transaction_logs'))}
+ 	<TR>
+ 		<TD WIDTH="100%">
+diff -Nru lms.org/templates/default/netdevlist.html lms/templates/default/netdevlist.html
+--- lms.org/templates/default/netdevlist.html	2014-05-15 10:50:25.000000000 +0200
++++ lms/templates/default/netdevlist.html	2014-07-17 14:40:03.245581000 +0200
+@@ -34,22 +34,22 @@
+ 	{cycle values="light,lucid" print=false}
+ 	{section name=netdevlist loop=$netdevlist start=$start max=$pagelimit}
+ 	<TR class="highlight {cycle}"  >
+-		<TD width="97%" onClick="return self.location.href='?m=netdevinfo&id={$netdevlist[netdevlist].id}';" VALIGN="TOP">
+-			<IMG src="img/netdev.gif" ALT=""> <a name="{$netdevlist[netdevlist].id}"><B>{$netdevlist[netdevlist].name}</B></A><BR>
++	    <TD width="97%" onClick="return self.location.href='?m={if $netdevlist[netdevlist].gponoltid gt 0}gponolt{else}netdev{/if}info&id={$netdevlist[netdevlist].id}';" VALIGN="TOP">
++		<IMG src="img/{if $netdevlist[netdevlist].gponoltid gt 0}gponolt{else}netdev{/if}.gif" ALT=""> <a name="{$netdevlist[netdevlist].id}"><B>{$netdevlist[netdevlist].name}</B></A><BR>
+ 			<IMG src="img/producer.gif" ALT=""> {$netdevlist[netdevlist].producer} {if $netdevlist[netdevlist].model}/ {$netdevlist[netdevlist].model}{/if}{if $netdevlist[netdevlist].location} / {$netdevlist[netdevlist].location}{/if}
+ 		</TD>
+-		<TD WIDTH="1%" onClick="return self.location.href='?m=netdevinfo&id={$netdevlist[netdevlist].id}';" align="right" VALIGN="TOP">
++		<TD WIDTH="1%" onClick="return self.location.href='?m={if $netdevlist[netdevlist].gponoltid gt 0}gponolt{else}netdev{/if}info&id={$netdevlist[netdevlist].id}';" align="right" VALIGN="TOP">
+ 			({$netdevlist[netdevlist].id|string_format:"%04d"})
+ 		</TD>
+-		<TD width="1%" onClick="return self.location.href='?m=netdevinfo&id={$netdevlist[netdevlist].id}';" NOWRAP>
+-			<IMG src="img/port.gif" ALT=""> {$netdevlist[netdevlist].ports} ({$netdevlist[netdevlist].takenports})<BR>
++		<TD width="1%" onClick="return self.location.href='?m={if $netdevlist[netdevlist].gponoltid gt 0}gponolt{else}netdev{/if}info&id={$netdevlist[netdevlist].id}';" NOWRAP>
++		    <IMG src="img/port.gif" ALT=""> {$netdevlist[netdevlist].ports} {if $netdevlist[netdevlist].gponoltid gt 0} {else}({$netdevlist[netdevlist].takenports}){/if}<BR>
+ 			<IMG src="img/serialnumber.gif" ALT=""> {$netdevlist[netdevlist].serialnumber}
+ 		</TD>
+ 		<TD WIDTH="1%" align="right">
+ 			<nobr>
+-			<a href="?m=netdevdel&id={$netdevlist[netdevlist].id}" onClick="return confirmLink(this, '{t a=$netdevlist[netdevlist].name}Are you sure, you want to remove device \'$a\' from database?{/t}')"><IMG src="img/delete.gif" alt="[ {trans("Delete")} ]" title="[ {trans("Delete")} ]"></A>
+-			<a href="?m=netdevedit&id={$netdevlist[netdevlist].id}"><IMG src="img/edit.gif" alt="[ {trans("Edit")} ]" title="[ {trans("Edit")} ]"></A>
+-			<a href="?m=netdevinfo&id={$netdevlist[netdevlist].id}"><IMG src="img/info.gif" alt="[ {trans("Info")} ]" title="[ {trans("Info")} ]"></A>
++			<a href="?m={if $netdevlist[netdevlist].gponoltid gt 0}gponolt{else}netdev{/if}del&id={$netdevlist[netdevlist].id}" onClick="return confirmLink(this, '{t a=$netdevlist[netdevlist].name}Are you sure, you want to remove device \'$a\' from database?{/t}')"><IMG src="img/delete.gif" alt="[ {trans("Delete")} ]" title="[ {trans("Delete")} ]"></A>
++			<a href="?m={if $netdevlist[netdevlist].gponoltid gt 0}gponolt{else}netdev{/if}edit&id={$netdevlist[netdevlist].id}"><IMG src="img/edit.gif" alt="[ {trans("Edit")} ]" title="[ {trans("Edit")} ]"></A>
++			<a href="?m={if $netdevlist[netdevlist].gponoltid gt 0}gponolt{else}netdev{/if}info&id={$netdevlist[netdevlist].id}"><IMG src="img/info.gif" alt="[ {trans("Info")} ]" title="[ {trans("Info")} ]"></A>
+ 			</nobr>
+ 		</TD>
+ 	</TR>

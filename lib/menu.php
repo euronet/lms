@@ -782,6 +782,19 @@ if(!empty($custom_menu))
 	if(file_exists($custom_menu))
 	        require_once($custom_menu);
 
+// -- GPON DASAN --
+if (chkconfig(ConfigHelper::getConfig('phpui.gpon')))
+{
+       if(!empty($CONFIG['directories']['lib_dir']))
+       {
+               if(file_exists($CONFIG['directories']['lib_dir'].'/gpon/GPON.menu.php'))
+               {
+                       require_once($CONFIG['directories']['lib_dir'].'/gpon/GPON.menu.php');
+               }
+       }
+}
+// -- GPON --
+
 /* Example for custom_menu file
 <?php
 	$menu['config']['submenu'][] = array(

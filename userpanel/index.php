@@ -1,5 +1,4 @@
 <?php
-
 /*
  *  LMS version 1.11-git
  *
@@ -23,18 +22,13 @@
  *
  *  $Id$
  */
-
 // REPLACE THIS WITH PATH TO YOUR CONFIG FILE
-
 $CONFIG_FILE = (is_readable('lms.ini')) ? 'lms.ini' : DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'lms' . DIRECTORY_SEPARATOR . 'lms.ini';
-
 // PLEASE DO NOT MODIFY ANYTHING BELOW THIS LINE UNLESS YOU KNOW
 // *EXACTLY* WHAT ARE YOU DOING!!!
 // *******************************************************************
-
 ini_set('session.name','LMSSESSIONID');
 ini_set('error_reporting', E_ALL&~E_NOTICE);
-
 // find alternative config files:
 if (is_readable('lms.ini'))
 	$CONFIG_FILE = 'lms.ini';
@@ -42,12 +36,9 @@ elseif (is_readable(DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'lms' . 
 	$CONFIG_FILE = DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'lms' . DIRECTORY_SEPARATOR . 'lms-' . $_SERVER['HTTP_HOST'] . '.ini';
 elseif (!is_readable($CONFIG_FILE))
 	die('Unable to read configuration file ['.$CONFIG_FILE.']!');
-
 define('CONFIG_FILE', $CONFIG_FILE);
-
 // Parse configuration file
 $CONFIG = (array) parse_ini_file($CONFIG_FILE, true);
-
 // Check for configuration vars and set default values
 $CONFIG['directories']['sys_dir'] = (!isset($CONFIG['directories']['sys_dir']) ? getcwd() : $CONFIG['directories']['sys_dir']);
 $CONFIG['directories']['lib_dir'] = (!isset($CONFIG['directories']['lib_dir']) ? $CONFIG['directories']['sys_dir'] . DIRECTORY_SEPARATOR . 'lib' : $CONFIG['directories']['lib_dir']);
@@ -57,11 +48,9 @@ $CONFIG['directories']['smarty_compile_dir'] = $CONFIG['directories']['userpanel
 $CONFIG['directories']['plugin_dir'] = (!isset($CONFIG['directories']['plugin_dir']) ? $CONFIG['directories']['sys_dir'] . DIRECTORY_SEPARATOR . 'plugins' : $CONFIG['directories']['plugin_dir']);
 $CONFIG['directories']['plugins_dir'] = $CONFIG['directories']['plugin_dir'];
 $CONFIG['directories']['doc_dir'] = (!isset($CONFIG['directories']['doc_dir']) ? $CONFIG['directories']['sys_dir'] . DIRECTORY_SEPARATOR . 'documents' : $CONFIG['directories']['doc_dir']);
-
 define('USERPANEL_DIR', $CONFIG['directories']['userpanel_dir']);
 define('USERPANEL_LIB_DIR', USERPANEL_DIR . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR);
 define('USERPANEL_MODULES_DIR', USERPANEL_DIR . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR);
-
 define('SYS_DIR', $CONFIG['directories']['sys_dir']);
 define('LIB_DIR', $CONFIG['directories']['lib_dir']);
 define('DOC_DIR', $CONFIG['directories']['doc_dir']);
@@ -69,19 +58,13 @@ define('MODULES_DIR', $CONFIG['directories']['modules_dir']);
 define('SMARTY_COMPILE_DIR', $CONFIG['directories']['smarty_compile_dir']);
 define('PLUGIN_DIR', $CONFIG['directories']['plugin_dir']);
 define('PLUGINS_DIR', $CONFIG['directories']['plugin_dir']);
-
 // include required files
-
 // Load autoloader
 require_once(LIB_DIR . DIRECTORY_SEPARATOR . 'autoloader.php');
-
 require_once(USERPANEL_LIB_DIR . DIRECTORY_SEPARATOR . 'checkdirs.php');
 require_once(LIB_DIR . DIRECTORY_SEPARATOR . 'config.php');
-
 // Initialize database
-
 $DB = null;
-
 try {
 	$DB = LMSDB::getInstance();
 } catch (Exception $ex) {
@@ -89,71 +72,51 @@ try {
 	// can't working without database
 	die("Fatal error: cannot connect to database!<BR>");
 }
-
 // Initialize templates engine (must be before locale settings)
 $SMARTY = new Smarty;
-
 // test for proper version of Smarty
-
 if (constant('Smarty::SMARTY_VERSION'))
 	$ver_chunks = preg_split('/[- ]/', preg_replace('/^smarty-/i', '', Smarty::SMARTY_VERSION), -1, PREG_SPLIT_NO_EMPTY);
 else
 	$ver_chunks = NULL;
-
 if (count($ver_chunks) < 1 || version_compare('3.1', $ver_chunks[0]) > 0)
 	die('<B>Wrong version of Smarty engine! We support only Smarty-3.x greater than 3.0.</B>');
-
 define('SMARTY_VERSION', $ver_chunks[0]);
-
 // add LMS's custom plugins directory
 $SMARTY->addPluginsDir(LIB_DIR . DIRECTORY_SEPARATOR . 'SmartyPlugins');
-
 // Redirect to SSL
-
 $_FORCE_SSL = ConfigHelper::checkConfig('phpui.force_ssl');
-
 if($_FORCE_SSL && $_SERVER['HTTPS'] != 'on')
 {
      header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
      exit(0);
 }
-
 $_TIMEOUT = ConfigHelper::getConfig('phpui.timeout');
-
 // Include required files (including sequence is important)
-
 require_once(LIB_DIR . DIRECTORY_SEPARATOR . 'language.php');
 include_once(LIB_DIR . DIRECTORY_SEPARATOR . 'definitions.php');
 require_once(LIB_DIR . DIRECTORY_SEPARATOR . 'unstrip.php');
 require_once(LIB_DIR . DIRECTORY_SEPARATOR . 'common.php');
-
 $AUTH = NULL;
 $SYSLOG = null;
 $LMS = new LMS($DB, $AUTH, $SYSLOG);
-
 require_once(USERPANEL_LIB_DIR . DIRECTORY_SEPARATOR . 'Session.class.php');
 require_once(USERPANEL_LIB_DIR . DIRECTORY_SEPARATOR . 'Userpanel.class.php');
 require_once(USERPANEL_LIB_DIR . DIRECTORY_SEPARATOR . 'ULMS.class.php');
 @include(USERPANEL_DIR . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'locale' . DIRECTORY_SEPARATOR . $_ui_language . DIRECTORY_SEPARATOR . 'strings.php');
-
 unset($LMS); // reset LMS class to enable wrappers for LMS older versions
-
 $LMS = new ULMS($DB, $AUTH, $SYSLOG);
-
 // Load plugin files and register hook callbacks
 $plugins = preg_split('/[;,\s\t\n]+/', ConfigHelper::getConfig('phpui.plugins', ''), -1, PREG_SPLIT_NO_EMPTY);
 if (!empty($plugins))
 	foreach ($plugins as $plugin_name)
 		if(is_readable(LIB_DIR . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . $plugin_name . '.php'))
 			require LIB_DIR . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . $plugin_name . '.php';
-
 $SESSION = new Session($DB, $_TIMEOUT);
 $USERPANEL = new USERPANEL($DB, $SESSION);
 $LMS->ui_lang = $_ui_language;
 $LMS->lang = $_language;
-
 // Initialize modules
-
 $enabled_modules = ConfigHelper::getConfig('userpanel.enabled_modules', null, true);
 if (!is_null($enabled_modules))
 	$enabled_modules = explode(',', $enabled_modules);
@@ -174,7 +137,6 @@ while (false !== ($filename = readdir($dh))) {
 	}
     }
 };
-
 $SMARTY->assignByRef('LANGDEFS', $LANGDEFS);
 $SMARTY->assignByRef('_ui_language', $LMS->ui_lang);
 $SMARTY->assignByRef('_language', $LMS->lang);
@@ -187,29 +149,22 @@ $SMARTY->addTemplateDir(array(
 $SMARTY->setCompileDir(SMARTY_COMPILE_DIR);
 $SMARTY->debugging = ConfigHelper::checkConfig('phpui.smarty_debug');
 require_once(USERPANEL_LIB_DIR . DIRECTORY_SEPARATOR . 'smarty_addons.php');
-
 $layout['upv'] = $USERPANEL->_version.' ('.$USERPANEL->_revision.'/'.$SESSION->_revision.')';
 $layout['lmsdbv'] = $DB->GetVersion();
 $layout['lmsv'] = $LMS->_version;
 $layout['smarty_version'] = SMARTY_VERSION;
 $layout['hostname'] = hostname();
 $layout['dberrors'] =& $DB->GetErrors();
-
 $SMARTY->assignByRef('modules', $USERPANEL->MODULES);
 $SMARTY->assignByRef('layout', $layout);
-
 header('X-Powered-By: LMS/'.$layout['lmsv']);
-
 if($SESSION->islogged)
 {
 	$module = isset($_GET['m']) ? $_GET['m'] : '';
-
 	if (isset($USERPANEL->MODULES[$module])) $USERPANEL->MODULES[$module]['selected'] = true;
-
 	// Userpanel rights module
 	$rights = $USERPANEL->GetCustomerRights($SESSION->id);
 	$SMARTY->assign('rights', $rights);
-
 	if(ConfigHelper::checkConfig('userpanel.hide_nodes_modules'))
 	{
 		if(!$DB->GetOne('SELECT COUNT(*) FROM nodes WHERE ownerid = ? LIMIT 1', array($SESSION->id)))
@@ -218,15 +173,12 @@ if($SESSION->islogged)
 			unset($USERPANEL->MODULES['stats']);
 		}
 	}
-
 	// Userpanel popup for urgent notice
 	$res = $LMS->ExecHook('userpanel_module_call_before', array('module' => $USERPANEL->MODULES['notices']));
-
 	if( file_exists(USERPANEL_MODULES_DIR.$module . DIRECTORY_SEPARATOR . 'functions.php')
 	    && isset($USERPANEL->MODULES[$module]) )
         {
     		include(USERPANEL_MODULES_DIR.$module . DIRECTORY_SEPARATOR . 'functions.php');
-
 		$function = isset($_GET['f']) && $_GET['f']!='' ? $_GET['f'] : 'main';
 		if (function_exists('module_'.$function)) 
 		{
@@ -263,7 +215,6 @@ if($SESSION->islogged)
     		$layout['error'] = trans('Module <b>$a</b> not found!', $module);
     		$SMARTY->display('error.html');
     	}
-
         if(!isset($_SESSION['lastmodule']) || $_SESSION['lastmodule'] != $module)
     		$_SESSION['lastmodule'] = $module;
 }
@@ -273,7 +224,5 @@ else
         $SMARTY->assign('target','?'.$_SERVER['QUERY_STRING']);
         $SMARTY->display('login.html');
 }
-
 $DB->Destroy();
-
 ?>

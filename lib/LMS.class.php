@@ -1151,10 +1151,10 @@ class LMS
         return $manager->GetNetDevConnectedNames($id);
     }
 
-    public function GetNetDevList($order = 'name,asc', $search = array())
+    public function GetNetDevList($order = 'name,asc', $search = array(), $gponolt=0)
     {
         $manager = $this->getNetDevManager();
-        return $manager->GetNetDevList($order, $search);
+        return $manager->GetNetDevList($order, $search, $gponolt);
     }
 
     public function GetNetDevNames()

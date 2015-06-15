@@ -25,7 +25,7 @@
  */
 
 // REPLACE THIS WITH PATH TO YOUR CONFIG FILE
-$CONFIG_FILE = DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'lms' . DIRECTORY_SEPARATOR . 'lms.ini';
+$CONFIG_FILE = DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'lms' . DIRECTORY_SEPARATOR . 'lmsgpon.ini';
 
 // PLEASE DO NOT MODIFY ANYTHING BELOW THIS LINE UNLESS YOU KNOW
 // *EXACTLY* WHAT ARE YOU DOING!!!
@@ -36,12 +36,7 @@ define('LMS-UI', true);
 ini_set('error_reporting', E_ALL&~E_NOTICE);
 
 // find alternative config files:
-if (is_readable('lms.ini'))
-	$CONFIG_FILE = 'lms.ini';
-elseif (is_readable(DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'lms' . DIRECTORY_SEPARATOR . 'lms-' . $_SERVER['HTTP_HOST'] . '.ini'))
-	$CONFIG_FILE = DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'lms' . DIRECTORY_SEPARATOR . 'lms-' . $_SERVER['HTTP_HOST'] . '.ini';
-elseif (!is_readable($CONFIG_FILE))
-	die('Unable to read configuration file ['.$CONFIG_FILE.']!'); 
+
 
 define('CONFIG_FILE', $CONFIG_FILE);
 
@@ -150,6 +145,24 @@ $LMS->lang = $_language;
 
 $plugin_manager = new LMSPluginManager();
 $LMS->setPluginManager($plugin_manager);
+
+// -- GPON DASAN --
+// Dodanie klasy GPON'a
+if (chkconfig(ConfigHelper::checkConfig('phpui.gpon')))
+{
+       if(!empty($CONFIG['directories']['lib_dir']))
+       {
+               if(file_exists($CONFIG['directories']['lib_dir'].'/gpon/GPON.menu.php') && file_exists($CONFIG['directories']['lib_dir'].'/gpon/GPON.class.php'))
+               {
+                       require_once(LIB_DIR.'/gpon/GPON.class.php');
+                       $GPON = new GPON($DB, $AUTH, $CONFIG);
+               }
+       }
+}
+$SMARTY->assignByRef('_phpui_gpon',$CONFIG['phpui']['gpon']);
+$CONFIG['directories']['rrd_dir'] = (!isset($CONFIG['directories']['rrd_dir']) ? $CONFIG['directories']['sys_dir'].'/rrd' : $CONFIG['directories']['rrd_dir']);
+define('RRD_DIR', $CONFIG['directories']['rrd_dir']);
+// -- GPON --
 
 // Initialize Swekey class
 

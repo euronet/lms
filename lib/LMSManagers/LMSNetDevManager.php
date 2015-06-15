@@ -283,14 +283,15 @@ class LMSNetDevManager extends LMSManager implements LMSNetDevManagerInterface
             'netnodeid' => $data['netnodeid'],
             'status' => $data['status'],
             'netdevicemodelid' => !empty($data['netdevicemodelid']) ? $data['netdevicemodelid'] : null,
+            'gponoltid' => $data['gponoltid']
         );
         if ($this->db->Execute('INSERT INTO netdevices (name, location,
 				location_city, location_street, location_house, location_flat,
 				description, producer, model, serialnumber,
 				ports, purchasetime, guaranteeperiod, shortname,
 				nastype, clients, secret, community, channelid,
-				longitude, latitude, invprojectid, netnodeid, status, netdevicemodelid)
-				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', array_values($args))) {
+				longitude, latitude, invprojectid, netnodeid, status, netdevicemodelid, gponoltid)
+				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', array_values($args))) {
             $id = $this->db->GetLastInsertID('netdevices');
 
             // EtherWerX support (devices have some limits)
@@ -371,7 +372,7 @@ class LMSNetDevManager extends LMSManager implements LMSNetDevManagerInterface
 			ORDER BY name', array($id, $id, $id, $id, $id, $id, $id));
     }
 
-    public function GetNetDevList($order = 'name,asc', $search = array())
+    public function GetNetDevList($order = 'name,asc', $search = array(), $gponolt=1)
     {
         list($order, $direction) = sscanf($order, '%[^,],%s');
 
@@ -435,15 +436,20 @@ class LMSNetDevManager extends LMSManager implements LMSNetDevManagerInterface
 					$where[] = "d.$key = ''";
 				break;
 		}
-
+//$where[]=' 1=1 ';
+	if($gponolt==1)
+		{
+			$where[]='d.gponoltid>0';
+		}
+                
 	$netdevlist = $this->db->GetAll('SELECT d.id, d.name, d.location,
 			d.description, d.producer, d.model, d.serialnumber, d.ports,
 			(SELECT COUNT(*) FROM nodes WHERE netdev=d.id AND ownerid > 0)
 			+ (SELECT COUNT(*) FROM netlinks WHERE src = d.id OR dst = d.id)
-			AS takenports, d.netnodeid, n.name AS netnode,
+			AS takenports, d.gponoltid, d.netnodeid, n.name AS netnode,
 			lb.name AS borough_name, lb.type AS borough_type,
 			ld.name AS district_name, ls.name AS state_name
-			FROM netdevices d
+			FROM netdevices d 
 			LEFT JOIN invprojects p ON p.id = d.invprojectid
 			LEFT JOIN netnodes n ON n.id = d.netnodeid
 			LEFT JOIN location_cities lc ON lc.id = d.location_city

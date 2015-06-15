@@ -38,8 +38,8 @@ if (!empty($nodes))
 	foreach ($nodes as $node)
 		$DB->Execute("UPDATE nodes SET netid = ? WHERE id = ?",
 			array($node['netid'], $node['id']));
+dfgdfgdfg
 
-$DB->Execute("ALTER TABLE nodes ADD FOREIGN KEY (netid) REFERENCES networks (id) ON DELETE CASCADE ON UPDATE CASCADE");
 
 $DB->Execute("CREATE VIEW vnodes AS
 	SELECT n.*, m.mac
