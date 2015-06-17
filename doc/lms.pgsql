@@ -2681,7 +2681,23 @@ insert into `gpononuportstype` (`name`) values('wifi');
 ALTER TABLE `netdevices` ADD COLUMN `gponoltid` int(11) DEFAULT NULL;
 ALTER TABLE `netdevices` ADD KEY `gponoltid` (`gponoltid`);
 
+/* --------------------------------------------------------
+  Structure of table "woj_devices" (customer devices)
+-------------------------------------------------------- */
+DROP SEQUENCE IF EXISTS woj_device_id_seq;
+CREATE SEQUENCE woj_device_id_seq;
+DROP TABLE IF EXISTS woj_device CASCADE;
+CREATE TABLE woj_device (
+	id integer DEFAULT nextval('woj_device_id_seq'::text) NOT NULL,
+	model varchar(128)	DEFAULT '',
+	serialnumber varchar(128)	DEFAULT '',
+	buydate varchar(11)	DEFAULT '',
+        vendor varchar(128)	DEFAULT '',
+        price integer DEFAULT 0 NOT NULL,
+        customerid integer,
+        info text,   
+	PRIMARY KEY (id)
+);
 
 
-
-INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion', '2015042700');
+INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion', '2015061700');
