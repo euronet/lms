@@ -49,6 +49,8 @@ $allnodegroups = $LMS->GetNodeGroupNames();
 $messagelist = $LMS->GetMessages($customerid, 10);
 $eventlist = $LMS->EventSearch(array('customerid' => $customerid), 'date,desc', true);
 $customernodes = $LMS->GetCustomerNodes($customerid);
+$othercustomerdevice = $LMS->GetDeviceListU();
+$customerdevice = $LMS->GetDeviceListC($customerid);
 
 if ($SYSLOG && (ConfigHelper::checkConfig('privileges.superuser') || ConfigHelper::checkConfig('privileges.transaction_logs'))) {
 	$trans = $SYSLOG->GetTransactions(array('key' => $SYSLOG_RESOURCE_KEYS[SYSLOG_RES_CUST], 'value' => $customerid));
@@ -74,7 +76,8 @@ $SMARTY->assign(array(
 	'comment' => $SESSION->get('addbc'),
 	'sourceid' => $SESSION->get('addsource'),
 ));
-
+$SMARTY->assignByRef('customerdevice', $customerdevice);
+$SMARTY->assignByRef('othercustomerdevice', $othercustomerdevice);
 $SMARTY->assign('sourcelist', $DB->GetAll('SELECT id, name FROM cashsources ORDER BY name'));
 $SMARTY->assignByRef('customernodes', $customernodes);
 $SMARTY->assignByRef('assignments', $assignments);
