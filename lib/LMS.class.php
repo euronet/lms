@@ -2422,5 +2422,180 @@ class LMS {
           $manager = $this->getDevicesManager();
         return $manager->GetDeviceListB($order, $search, $sqlskey);
     }
+     protected function getMacManager() {
+        if (!isset($this->mac_manager)) {
+            $this->mac_manager = new LMSMacManager($this->DB, $this->AUTH, $this->cache, $this->SYSLOG);
+        }
+        return $this->mac_manager;
+    }
+
+    public function setMacManager(LMSMacManagerInterface $manager) {
+        $this->mac_manager = $manager;
+    }
+    
+     public function MacExists($id, $table){
+         $manager = $this->getMacManager();
+        return $manager->MacExists($id, $table);
+     }
+     public function GetMac($id, $table){
+          $manager = $this->getMacManager();
+        return $manager->GetMac($id, $table);
+     }
+   public function DeleteMac($id, $table){
+        $manager = $this->getMacManager();
+        return $manager->DeleteMac($id, $table);
+   }
+   public function DeleteMacList($table=0, $search=NULL, $sqlskey='AND'){
+        $manager = $this->getMacManager();
+        return $manager->DeleteMacList($table=0, $search=NULL, $sqlskey='AND');
+   }
+   public function UpdateMac($mac, $ip, $port, $vlan, $lastonline){
+        $manager = $this->getMacManager();
+        return $manager->UpdateMac($mac, $ip, $port, $vlan, $lastonline);
+   }
+   public function ArchMac($id, $table){
+        $manager = $this->getMacManager();
+        return $manager->ArchMac($id, $table);
+   }
+  public function GetMacList($order='mac,asc',$table=0, $search=NULL, $sqlskey='AND', $details, $limit)
+	{
+		list($order,$direction) = sscanf($order, '%[^,],%s');
+		($direction != 'desc') ? $direction = 'asc' : $direction = 'desc';
+
+		switch($order)
+		{
+			case 'id':
+				$sqlord = 'ORDER BY id';
+			break;
+			case 'ip':
+				$sqlord = 'ORDER BY ip';
+			break;
+			case 'port':
+				$sqlord = 'ORDER BY port';
+			break;
+			case 'vlan':
+				$sqlord = 'ORDER BY vlan';
+			break;
+			case 'lastonline':
+				$sqlord = 'ORDER BY lastonline';
+			break;
+			case 'compact':
+				$sqlord = 'GROUP by mac ORDER BY lastonline';
+			break;
+			default:
+				$sqlord = 'ORDER BY mac';
+			break;
+		}
+
+		$over = 0; $below = 0; $sqlsarg = '';
+
+		if(sizeof($search))
+			foreach($search as $key => $value)
+			{
+				$valoryg = $value;
+				$value = str_replace(' ','%',trim($value));
+				if($value!='')
+				{
+					$value2 = "'".$value."'";
+					$value = "'%".$value."%'";
+					switch($key)
+					{
+						case 'mac':
+							$value = str_replace('-',':',$value);
+							$searchargs[] = "(mac LIKE $value)";
+						break;
+						case 'ip':
+							$searchargs[] = "(ip = inet_aton('$valoryg'))";
+						break;
+						case 'port':
+							$searchargs[] = "(port = $value2)";
+						break;
+						case 'vlan':
+							$searchargs[] = "(vlan LIKE $value2)";
+						break;
+						case 'from':
+							$valoryg = strtotime($valoryg);
+							$searchargs[] = "(lastonline >= $valoryg)";
+						break;
+						case 'to':
+							$valoryg = strtotime($valoryg);
+							$searchargs[] = "(lastonline <= $valoryg)";
+						break;
+						default:
+							$searchargs[] = "$key LIKE $value";
+					}
+				}
+			}
+
+		if(isset($searchargs))
+			$sqlsarg = implode(' '.$sqlskey.' ',$searchargs);
+		
+		switch($table)
+		{
+			case 0: 
+				$sqltable = 'woj_macchange';
+				break;
+			case 2:
+				$sqltable = 'woj_macarch';
+				break;
+			case 1:
+			default:
+				$sqltable = 'woj_macok';
+		}
+
+		$all = $this->DB->GetOne(
+				'SELECT count(*) AS ile '
+				.'FROM '.$sqltable.' '
+				.'WHERE 1=1 '
+				.($sqlsarg !='' ? ' AND ('.$sqlsarg.') ' :'')
+				.'GROUP BY mac '
+				.($sqlord !='' ? $sqlord.' '.$direction:''));
+				
+		$maclist = $this->DB->GetAll(
+				'SELECT id, inet_ntoa(ip) AS ip, mac, port, vlan, lastonline '
+				.'FROM '.$sqltable.' '
+				.'WHERE 1=1 '
+				.($sqlsarg !='' ? ' AND ('.$sqlsarg.') ' :'')
+				.($sqlord !='' ? $sqlord.' '.$direction:'')
+				.($limit ? ' LIMIT '.$limit : ''));
+
+		if(isset($details)&&sizeof($maclist))
+		{
+			foreach($maclist as $idx => $row)
+			{
+				$nodeid = $this->GetNodeIDByMAC($row['mac']);
+				$node = $this->GetNode($nodeid);
+
+				if( $node['ownerid'])
+				{
+					$customer = $this->GetCustomer($node['ownerid']);
+					$maclist[$idx]['custnodeid'] = $customer['id'];
+					$maclist[$idx]['custnodename'] = $customer['customername'];
+					if($customer['phone3'])
+						$maclist[$idx]['custnodeaddr'] = $customer['phone3'];
+					else
+						$maclist[$idx]['custnodeaddr'] = $customer['address'];
+					$maclist[$idx]['custnodetype'] = 0;
+				} else if( $node['netdev'])
+				{
+					$netdev = $this->GetNetDev($node['netdev']);
+					$maclist[$idx]['custnodeid'] = $netdev['id'];
+					$maclist[$idx]['custnodename'] = $netdev['name'].' ('.$netdev['producer'].')';
+					$maclist[$idx]['custnodetype'] = 1;
+				}
+			}
+		}
+
+		$maclist['total'] = sizeof($maclist);
+		$maclist['state'] = $state;
+		$maclist['order'] = $order;
+		$maclist['direction'] = $direction;
+		$maclist['below']= $below;
+		$maclist['over']= $over;
+		$maclist['all'] = $all;
+
+		return $maclist;
+	}
+   
 
 }

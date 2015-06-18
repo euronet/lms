@@ -286,6 +286,29 @@ $menu = array(
 			),
 		),
 
+'maclist' => array(
+			'name' => trans('MAC tables'),
+			'img' =>'isource.gif',
+			'link' =>'?m=maclist',
+			'tip' => trans('Record of MACs'),
+			'accesskey' =>'p',
+			'prio' => '16',
+			'submenu' => array(
+				array(
+					'name' => trans('List'),
+					'link' => '?m=maclist',
+					'tip' => trans('Record of MACs'),
+				),
+				array(
+					'name' => trans('Search'),
+					'link' => '?m=macsearch',
+					'tip' => trans('Search in mac table'),
+				),
+			),
+		),
+
+
+
 		'networks' => array(
 			'name' => trans('IP Networks'),
 			'img' =>'network.gif',

@@ -1,0 +1,38 @@
+{extends file="layout.html"}
+{block name=title}::: LMS :{$layout.pagetitle|striphtml} :::{/block}
+{block name=module_content}
+<TABLE class="lmsbox" id="table">
+	<TR CLASS="DARK">
+		<TD>
+			<B>{t}Record of MACs{/t} ({$listdata.total})</B>
+		</TD>
+	</TR>
+	{cycle values="light,lucid" print=false}
+	{section name=maclist loop=$maclist start=0 max=10}
+	<TR class="{cycle}" cellspacing="2" onmouseover="addClass(this, 'highlight')" onmouseout="removeClass(this, 'highlight')">
+		<TD>
+			<IMG src="img/mac.gif" alt="">&nbsp;<b>{$maclist[maclist].mac}</b>&nbsp;/&nbsp;
+			<IMG src="img/ip.gif" alt="">&nbsp;<b>{$maclist[maclist].ip}</b>
+			<BR>
+			<IMG src="img/port.gif" alt="">&nbsp;port {$maclist[maclist].port}&nbsp;<b>/</b>
+			&nbsp;<IMG src="img/pin.gif" alt="">&nbsp;{if $maclist[maclist].vlan != 0}vlan {$maclist[maclist].vlan}{else}ND{/if}&nbsp;<b>/</b>
+			&nbsp;<IMG src="img/time.gif" alt="">&nbsp;{$maclist[maclist].lastonline}
+		</TD>
+	</TR>
+	{sectionelse}
+	<TR>
+		<TD align="center" class="flr">
+			<p>&nbsp;</p>
+			<p><B>{t}No such MAC addresses matching search criteria.{/t}</B></p>
+			<p>&nbsp;</p>
+		</TD>
+	</TR>
+	{/section}
+</TABLE>
+<SCRIPT TYPE="text/javascript">
+<!--
+var table = document.getElementById('table');
+autoiframe_setsize('autoiframe', table.offsetWidth, table.offsetHeight);
+//-->
+</SCRIPT>
+{/block}
