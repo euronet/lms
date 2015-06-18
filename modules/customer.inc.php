@@ -76,6 +76,44 @@ $SMARTY->assign(array(
 	'comment' => $SESSION->get('addbc'),
 	'sourceid' => $SESSION->get('addsource'),
 ));
+
+// zmiany bartek
+$new = 0;
+$open = 0;
+$resolved = 0;
+$all = 0;
+ $sth    = $DB->GetAll('SELECT * FROM rttickets WHERE customerid=?', array($customerid));
+foreach ($sth as $idx => $row) {
+				
+				// summary
+				if ($row['state'] == 0)
+					$new=$new + 1;
+				elseif ($row['state'] == 1)
+					$open = $open + 1;
+				elseif ($row['state'] == 2)
+					$resolved = $resolved + 1;
+		
+			}
+$all=count($sth);
+ $SMARTY->assignByRef('new', $new);
+ $SMARTY->assignByRef('open', $open);
+ $SMARTY->assignByRef('resolved', $resolved);
+ $SMARTY->assignByRef('all', $all);
+
+
+// zmiany na karcie komputerow
+
+foreach ($customernodes as $key => $val)
+{
+$sth= $DB->GetOne('SELECT ipaddr FROM nodes WHERE ownerid = 0 AND netdev=?', array($val['netid']));
+
+$customernodes[$key]['sw']=long2ip($sth);
+
+		}
+$grupy = $DB->GetAll('SELECT * from customergroups where id not in
+(SELECT customergroupid from customerassignments where customerid = ?) order by name', array($customerid));
+$SMARTY->assignByRef('grupy', $grupy);
+$SMARTY->assignByRef('customernodes', $customernodes);
 $SMARTY->assignByRef('customerdevice', $customerdevice);
 $SMARTY->assignByRef('othercustomerdevice', $othercustomerdevice);
 $SMARTY->assign('sourcelist', $DB->GetAll('SELECT id, name FROM cashsources ORDER BY name'));

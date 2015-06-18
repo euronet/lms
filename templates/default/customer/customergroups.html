@@ -51,6 +51,7 @@
 							<OPTION VALUE="{$othercustomergroups[t].id}">{$othercustomergroups[t].name} ({$othercustomergroups[t].id|string_format:"%04d"})</OPTION>
 							{/section}
 						</SELECT>
+<a id="opener">Dodaj wiele grup</a>
 					</TD>
 					<TD rowspan="2" class="text-right nobr">
 						<A href="javascript:document.customergroupassignment.submit()" {tip text="Add customer to group"}>{trans("Add")} <IMG src="img/save.gif" alt=""></A>
@@ -63,9 +64,52 @@
 	</TBODY>
 </TABLE>
 </FORM>
+{literal}
+<SCRIPT type="text/javascript">
+$(function() {
+$( "#dialog" ).dialog({
+autoOpen: false,
+show: {
+effect: "blind",
+duration: 1000
+},
+hide: {
+effect: "explode",
+duration: 1000
+}
+});
+$( "#opener" ).click(function() {
+
+$("#checkbox:checked").removeAttr("checked");
+
+
+$( "#dialog" ).dialog( "open" );
+ $('.ui-dialog-titlebar').css('background', '#CEBD9B');
+$('.ui-dialog-content').css('background', '#EBE4D6');
+
+});
+});
+</script>
+{/literal}
+<div id="dialog" title="Dodaj grupy">
+<form action="?m=fewgroupadd&id={$customerinfo.id}" Method="POST">
+{foreach from=$grupy item=news key=key}
+<label class="checkbox-inline">
+  <input type="checkbox" id="checkbox" name="checkbox[]" value="{$news.id}"> <p style="font-size:10px;display:inline;">{$news.name}</p>
+</label>
+<br>
+{/foreach}
+<input type="submit" name="submit" value="Zapisz" style="float:right;" />
+</form>
+
+</div>
+
 <SCRIPT type="text/javascript">
 <!--
 	if (getCookie('groupspanel') == '1')
+	{
 		document.getElementById('groupspanel').style.display = '';
+	}
 //-->
 </SCRIPT>
+

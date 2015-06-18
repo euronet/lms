@@ -356,6 +356,17 @@
 			{if $customerinfo.moddate}{$customerinfo.modifiedby}, {$customerinfo.moddateh}{else}-{/if}
 		</TD>
 	</TR>
+<TR CLASS="LIGHT">
+                <TD WIDTH="1%">
+                        <IMG SRC="img/recover.gif" ALT="">
+                </TD>
+                <TD WIDTH="1%" NOWRAP>
+                        <B>Zg&#322;oszenia:</B>
+                </TD>
+                <TD WIDTH="98%"><a href="?m=rtticketadd&id=Array&customerid={$customerinfo.id}">Nowe</a><b><font color="green"> {$new}</font></b>  | <A HREF="?m=rtsearch&id={$customerinfo.id}"> Otwarte</A> 
+ <b><font color="blue">{$open}</font></b> | Rozwi&#261;zane <b>{$resolved}</b> |   Wszystkie <b>{$all}</b> </TD>
+        </TR>
+
                                         	</TABLE>
 					</TD>
 				</TR>

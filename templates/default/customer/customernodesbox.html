@@ -46,10 +46,12 @@ function setgroup(act)
 	<TR id="nodespanel-{$layout.module}" style="display:none;">
 		<TD style="width: 100%;" colspan="2">
 			<FORM method="post" action="" name="custnodeslist">
-			<TABLE class="lmsbox-inner">
+			    <TABLE cellpadding="7" cellspacing="0" WIDTH="100%">
 				<THEAD>
 					<TR>
 						<TD style="width: {math equation="x-y" x=95 y=$ewx}%;" class="bold">{trans("Name:")}</TD>
+                                                <TD style="width: 1%;" class="text-right">{trans("Switch:")}</TD>    
+ <TD style="width: 1%;" class="text-right">{trans("Port:")}</TD>      
 						<TD style="width: 1%;" class="text-right">{trans("ID:")}</TD>
 						{if $ewx}
 						<TD style="width: 1%;" class="text-right">{trans("Channel:")}</TD>
@@ -83,6 +85,7 @@ function setgroup(act)
 							<span class="nobr">{$customernodes[customernodes].info|truncate:60:"...":true}</span>
 							{/if}
 						</TD>
+<td align="center"><b>{$customernodes[customernodes].sw}</td><td align="center"> {$customernodes[customernodes].port}</b></td>
 						<TD onClick="return self.location.href='?m=nodeinfo&amp;id={$customernodes[customernodes].id}';" class="text-right">
 							({$customernodes[customernodes].id|string_format:"%04d"})
 						</TD>
@@ -148,7 +151,7 @@ function setgroup(act)
 							</SELECT>
 							{/if}
 						</TD>
-						<TD class="ftop text-right nobr" colspan="3">
+						<TD class="ftop text-right nobr" colspan="7">
 							<label for="allbox">{trans("Check All")}</label><INPUT type="checkbox" name="allbox" id="allbox" onchange="CheckAll('custnodeslist', this)" value="1" checked>
 						</TD>
 					</TR>
