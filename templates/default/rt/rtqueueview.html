@@ -14,16 +14,17 @@
 			<a href="?m={$layout.module}&id={$queuedata.id}&s={$queuedata.state}&o=subject{if $queuedata.direction == "asc" && $queuedata.order == "subject"},desc{/if}"><B>{trans("Subject:")}</B></A> {if $queuedata.order == "subject"}<IMG SRC="img/{if $queuedata.direction == "desc"}asc{else}desc{/if}_order.gif" alt="">{/if}<BR>
 			<a href="?m={$layout.module}&id={$queuedata.id}&s={$queuedata.state}&o=requestor{if $queuedata.direction == "asc" && $queuedata.order == "requestor"},desc{/if}">{trans("Submitter:")}</A> {if $queuedata.order == "requestor"}<IMG SRC="img/{if $queuedata.direction == "desc"}asc{else}desc{/if}_order.gif" alt="">{/if}
 		</TD>
-		<TD WIDTH="1%" NOWRAP>
+		<TD WIDTH="1%" colspan="2" NOWRAP>
 			<a href="?m={$layout.module}&id={$queuedata.id}&s={$queuedata.state}&o=owner{if $queuedata.direction == "asc" && $queuedata.order == "owner"},desc{/if}"><B>{trans("Owner")}</B></A>{if $queuedata.order == "owner"}<IMG SRC="img/{if $queuedata.direction == "desc"}asc{else}desc{/if}_order.gif" alt="">{/if}:<BR>
 			<a href="?m={$layout.module}&id={$queuedata.id}&s={$queuedata.state}&o=lastmodified{if $queuedata.direction == "asc" && $queuedata.order == "lastmodified"},desc{/if}">{trans("Last modified:")}</A> {if $queuedata.order == "lastmodified"}<IMG SRC="img/{if $queuedata.direction == "desc"}asc{else}desc{/if}_order.gif" alt="">{/if}
 		</TD>
 		<TD WIDTH="1%" NOWRAP>
 			<B>{trans("Total:")} {$queuedata.total|default:"0"}</B>
 		</TD>
+
 	</TR>
 	<TR>
-		<TD colspan="5">
+		<TD colspan="6">
 		    <TABLE cellpadding="0" cellspacing="0">
 			<TR>
 			    <TD width="1%" NOWRAP>
@@ -64,6 +65,16 @@
 				</SELECT>
 			    </FORM>
 			    </TD>
+<TD width="50%" align="right">
+<form action="?m=changeque&id={$queuedata.id}" method="post" name="formticket">
+				Przenieś zgłoszenia: <SELECT size="1" name="que" >
+				       					{section name="ticket" loop=$ticket}
+					 <OPTION value="{$ticket[ticket].id}" >{$ticket[ticket].name|truncate:40:"...":true}</OPTION>
+					{/section}
+				</SELECT>
+<a style="display: inline;" OnClick="document.formticket.submit();"> Przenieś</a>
+
+			    </TD>
 			    <TD width="99%" align="right">
 				<A HREF="?m=rtticketadd&id={$queuedata.id}">{trans("New Ticket")} <IMG src="img/save.gif" ALT=""></A>
 			    </TD>
@@ -73,7 +84,7 @@
 	</TR>		
 	{if $queuedata.total != 0}
 	<TR>
-		<TD class="pagination" colspan="5">
+		<TD class="pagination" colspan="6">
 			{include file="scroller.html" listdata=$queuedata loop=$queue}
 		</TD>
 	</TR>
@@ -124,6 +135,9 @@
 			{/if}
 			{if $queue[ticket].state == 0 || $queue[ticket].state == 3}</FONT>{/if}
 		</TD>
+<TD NOWRAP>
+<input type="checkbox" name="zgloszenie[]" value="{$queue[ticket].id}" />		
+		</TD>
 		<TD NOWRAP onClick="return self.location.href='?m=rtticketview&id={$queue[ticket].id}';">
 			{if $queue[ticket].state == 3}
 				<FONT class="brown">
@@ -134,6 +148,7 @@
 			{$queue[ticket].lastmodified|date_format:"%Y/%m/%d %H:%M:%S"|default:"-"}
 			{if $queue[ticket].state == 0 || $queue[ticket].state == 3}</FONT>{/if}
 		</TD>
+
 		<TD align="right" NOWRAP>
 			<A href="?m=rtticketprint&id={$queue[ticket].id}" target="_BLANK"><IMG src="img/print.gif" alt="[ {trans("Print")} ]" title="[ {trans("Print")} ]" title="[ {trans("Edit")} ]"> </A>
 			<A href="?m=rtticketdel&id={$queue[ticket].id}" onClick="return confirmLink(this, '{t a=$queue[ticket].id|string_format:"%06d"}Are you sure, you want to remove ticket $a?{/t}')"><IMG src="img/delete.gif" alt="[ {trans("Delete")} ]" title="[ {trans("Delete")} ]"></A>
@@ -154,13 +169,13 @@
     <TFOOT>
 	{if $queuedata.total != 0}
 	<TR>
-		<TD class="pagination" colspan="5">
+		<TD class="pagination" colspan="6">
 			{include file="scroller.html" listdata=$queuedata loop=$queue}
 		</TD>
 	</TR>
 	{/if}
 	<TR>
-		<TD COLSPAN="5" ALIGN="right">
+		<TD COLSPAN="6" ALIGN="right">
 			<A HREF="?m=rtticketadd&id={$queuedata.id}">{trans("New Ticket")} <IMG src="img/save.gif" ALT=""></A>
 		</TD>
 	</TR>

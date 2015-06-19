@@ -134,7 +134,8 @@ $SESSION->save('rtp', $page);
 
 $queues = $LMS->GetQueueList(false);
 $categories = $LMS->GetCategoryList(false);
-
+$ticket = $LMS->GetQueueList();
+$SMARTY->assign('ticket', $ticket);
 $SMARTY->assign('queues', $queues);
 $SMARTY->assign('categories', $categories);
 $SMARTY->assign('queue', $queue);
