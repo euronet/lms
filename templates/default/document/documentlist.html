@@ -97,6 +97,14 @@
 					<OPTION value="{$plan.id}"{if $listdata.numberplan == $plan.id} selected{/if}>{number number=$plan.next template=$plan.template time=$invoice.cdate} ({$_NUM_PERIODS.$period})</OPTION>
 					{/foreach}
 				</SELECT>&nbsp;
+{trans("Author:")}
+				<SELECT size="1" name="u" ONCHANGE="filter()">
+				<OPTION value="0" SELECTED >{trans("- all -")}</OPTION>
+{foreach $users as $user}
+
+				<OPTION VALUE="{$user.id}">{$user.name}</OPTION>
+	{/foreach}
+				</SELECT>&nbsp;
 				<A href="javascript: filter();">&raquo;&raquo;&raquo;</A>&nbsp;
 				</div>
 		</TD>

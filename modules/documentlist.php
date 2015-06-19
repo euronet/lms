@@ -24,7 +24,7 @@
  *  $Id$
  */
 
-function GetDocumentList($order='cdate,asc', $type=NULL, $customer=NULL, $numberplan = NULL, $from=0, $to=0)
+function GetDocumentList($order='cdate,asc', $type=NULL, $customer=NULL, $numberplan = NULL, $from=0, $to=0, $user=NULL)
 {
 	global $DB, $AUTH;
 
@@ -67,6 +67,7 @@ function GetDocumentList($order='cdate,asc', $type=NULL, $customer=NULL, $number
 			. ($numberplan ? ' AND d.numberplanid = ' . intval($numberplan) : '')
 			.($from ? ' AND d.cdate >= '.intval($from) : '')
 			.($to ? ' AND d.cdate <= '.intval($to) : '')
+			.($user ? ' AND d.userid = '.intval($user) : '')
 			.$sqlord, array($AUTH->id));
 
 	$list['total'] = sizeof($list);
@@ -102,6 +103,13 @@ if (empty($_GET['init']))
 		$p = $_GET['p'];
 	$SESSION->save('doclp', $p);
 
+
+if(!isset($_GET['u']))
+	   $SESSION->restore('doclu', $u);
+    else
+	    $u = $_GET['u'];
+$SESSION->save('doclu', $u);
+
     if(isset($_GET['from']))
     {
         if($_GET['from'] != '')
@@ -135,7 +143,7 @@ if (empty($_GET['init']))
     $SESSION->save('doclto', $to);
 }
 
-$documentlist = GetDocumentList($o, $t, $c, $p, $from, $to);
+$documentlist = GetDocumentList($o, $t, $c, $p, $from, $to, $u);
 
 $listdata['total'] = $documentlist['total'];
 $listdata['order'] = $documentlist['order'];
@@ -145,6 +153,7 @@ $listdata['customer'] = $c;
 $listdata['numberplan'] = $p;
 $listdata['from'] = $from;
 $listdata['to'] = $to;
+$listdata['user'] = $u;
 
 unset($documentlist['total']);
 unset($documentlist['order']);
@@ -174,13 +183,14 @@ if (!ConfigHelper::checkValue(ConfigHelper::getConfig('phpui.big_networks', fals
 {
     $SMARTY->assign('customers', $LMS->GetCustomerNames());
 }
-
+$users=$LMS->GetUserList();
 $SMARTY->assign('numberplans', $LMS->GetNumberPlans(array(DOC_CONTRACT, DOC_ANNEX, DOC_PROTOCOL, DOC_ORDER, DOC_SHEET, -6, -7, -8, -9, -99, DOC_OTHER)));
 $SMARTY->assign('documentlist', $documentlist);
 $SMARTY->assign('pagelimit', $pagelimit);
 $SMARTY->assign('page', $page);
 $SMARTY->assign('start', $start);
 $SMARTY->assign('listdata', $listdata);
+$SMARTY->assign('users', $users);
 $SMARTY->display('document/documentlist.html');
 
 ?>
