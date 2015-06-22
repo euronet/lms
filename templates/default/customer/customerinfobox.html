@@ -1,3 +1,90 @@
+{literal}
+<SCRIPT type="text/javascript">
+<!--
+        function clearcounter()
+        {
+{/literal}
+                location.href = '?m=clearcounter&id={$customerinfo.id}';
+{literal}
+        }
+        function changetype()
+        {
+{/literal}
+                location.href = '?m=changetype&id={$customerinfo.id}&type='+checkradio();
+{literal}
+        }
+        function checkradio()
+        {
+                var tab = document['form1'].elements['msg[type]'];
+                for (var i = 0; i < tab.length; i++) {
+                        if (tab[i].checked) {
+                                return i;
+                        }
+                }
+        return -1;
+        }
+        function changevalue()
+        {
+{/literal}
+                location.href = '?m=changevalue&id={$customerinfo.id}';
+{literal}
+        }
+        function changestazowe()
+        {
+{/literal}
+                location.href = '?m=stazowechange&id={$customerinfo.id}';
+{literal}
+        }
+        function changedzienne()
+        {
+{/literal}
+                location.href = '?m=dziennechange&id={$customerinfo.id}';
+{literal}
+        }
+        function changenocne()
+        {
+{/literal}
+                location.href = '?m=nocnechange&id={$customerinfo.id}';
+{literal}
+        }
+        function changestazowe10p()
+        {
+{/literal}
+                location.href = '?m=stazowe_p10&id={$customerinfo.id}';
+{literal}
+        }
+        function zerujstazowe()
+        {
+{/literal}
+                location.href = '?m=stazowezeruj&id={$customerinfo.id}';
+{literal}
+	}
+        function zerujdzienne()
+        {
+{/literal}
+                location.href = '?m=dziennezeruj&id={$customerinfo.id}';
+{literal}
+	}
+        function zerujnocne()
+        {
+{/literal}
+                location.href = '?m=nocnezeruj&id={$customerinfo.id}';
+{literal}
+	}
+        function sendemail(data)
+        {
+
+                location.href = '?m=sendemail&id={/literal}{$customerinfo.id}{literal}&data='+data+'{/literal}';
+{literal}
+        }
+        function clearlastclick()
+        {
+{/literal}
+                location.href = '?m=clearlastclick&id={$customerinfo.id}';
+{literal}
+        }
+//-->
+</SCRIPT>{/literal}
 <!--// $Id$ //-->
 <TABLE class="lmsbox">
     <THEAD>
@@ -90,6 +177,10 @@
 		</TD>
 		<TD WIDTH="99%">
 			<A HREF="mailto:{$customerinfo.email}">{$customerinfo.email}</A>
+<A HREF="javascript:sendemail('2012')">Wyslij faktury za 2012</a> |
+			<A HREF="javascript:sendemail('2013')"> za 2013</a> |
+			<A HREF="javascript:sendemail('2014')"> za 2014</a> |
+			<A HREF="javascript:sendemail('2015')"> za 2015</a>
 		</TD>
 	</TR>
 {/if}
