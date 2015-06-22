@@ -21,8 +21,9 @@
 					<TD style="width: 1%;" class="bold nobr">{trans("Number:")}</TD>
 					<TD style="width: 1%;" class="nobr">{trans("Created:")}</TD>
 					<TD style="width: 1%;" class="bold nobr">{trans("Type:")}</TD>
-					<TD style="width: 95%;" class="nobr">{trans("Title:")}</TD>
-					<TD style="width: 1%;" class="nobr">{trans("Period:")}</TD>
+					<TD style="width: 1%;" class="nobr">{trans("Title:")}</TD>
+<TD style="width: 90%;" class="nobr">{trans("Created by:")}</TD>
+					<TD style="width: 5%;" class="nobr">{trans("Period:")}</TD>
 					<TD style="width: 1%;" class="nobr"></TD>
 				</TR>
 				</THEAD>
@@ -36,7 +37,9 @@
 					<TD class="nobr" onclick="window.open('?m=documentview&amp;id={$doc.docid}');">{$doc.cdate|date_format:"%Y/%m/%d"}</TD>
 					<TD class="bold nobr" onclick="window.open('?m=documentview&amp;id={$doc.docid}');">{assign var=type value=$doc.type}{$_DOCTYPES.$type}</TD>
 					<TD class="nobr" onclick="window.open('?m=documentview&amp;id={$doc.docid}');">{$doc.title|truncate:40:"...":true}</TD>
-					<TD class="nobr" onclick="window.open('?m=documentview&amp;id={$doc.docid}');">
+<TD class="nobr" onclick="window.open('?m=documentview&amp;id={$doc.docid}');">{$doc.name|truncate:40:"...":true}</TD>
+
+<TD class="nobr" onclick="window.open('?m=documentview&amp;id={$doc.docid}');">
 						{if $doc.fromdate}{trans("from")} {$doc.fromdate|date_format:"%Y/%m/%d"}{/if}
 						{if $doc.todate}{trans("to")} {$doc.todate|date_format:"%Y/%m/%d"}{/if}
 					</TD>

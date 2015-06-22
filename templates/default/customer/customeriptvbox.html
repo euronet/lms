@@ -1,0 +1,108 @@
+<!--// $Id: customeriptvbox.html,v 1.0 2010/12/02 00:00:00 emers Exp $ //-->
+<TABLE WIDTH="100%" CELLPADDING="3" class="lmsbox">
+<THEAD>
+	<TR CLASS="DARK" onclick="showOrHide('iptvpanel');">
+		<TD class="fall">
+			<IMG src="img/host.gif" alt="">
+			<B><A name="groups">{t}IPTV{/t}:</A></B> 
+		</TD>
+	</TR>
+</THEAD>
+	<TR id="iptvpanel" style="display:none;">
+		<TD WIDTH="100%" class="fall">
+			<TABLE cellpadding="5" cellspacing="0" WIDTH="100%">
+				<TR class="dark">
+					<TD WIDTH="98%" NOWRAP class="fleftu"><B>Subscriber Beesmart # {$customerinfo.beesmart} </b> Przelacz na: <a href="?m=beesmart&id={$customerinfo.id}&bee=1">Podstawowy #1</a> | <a href="?m=beesmart&id={$customerinfo.id}&bee=2">Lite #2</a> | <a href="?m=beesmart&id={$customerinfo.id}&bee=3">TEST FW #3</a> | <a href="?m=beesmart&id={$customerinfo.id}&bee=4">TEST FW #4</a> | <a href="?m=beesmart&id={$customerinfo.id}&bee=5">TEST FW #5</a> | <a href="?m=beesmart&id={$customerinfo.id}&bee=10">Satlan #10</a></B>
+					</TD>
+                                        <TD WIDTH="2%" ALIGN="RIGHT" class="frightu">&nbsp;</TD>
+				</TR>
+				{if $iptv_subscriber.surname}
+				<TR class="{cycle}" onmouseover="addClass(this, 'highlight')" onmouseout="removeClass(this, 'highlight')">
+					<TD WIDTH="98%" NOWRAP>{$iptv_subscriber.surname} {$iptv_subscriber.name}</TD>
+					<TD WIDTH="2%" ALIGN="RIGHT" NOWRAP><A onClick="return confirmLink(this, '{t}czyusunacsprzet{/t}')" HREF="?m=acustomersprzetdel&customersprzetid={$customersprzet.id}&id={$customerinfo.id}" {tip text="usunsprzet"}>{t}Delete{/t} <IMG SRC="img/delete.gif" ALT=""></A></TD>
+				</TR>
+				{else}
+				<TR>
+					<TD align="center" WIDTH="100%" colspan="5">
+						<p><B>{t}brakabonenta{/t}</B></p>
+					</TD>
+				</TR>
+				{/if}
+			</TABLE>
+			<TABLE cellpadding="5" cellspacing="0" WIDTH="100%">
+                                <TR class="dark">
+                                        <TD WIDTH="10%" NOWRAP class="fleftu"><B>{t}Adres MAC{/t}:</B></TD>
+                                        <TD WIDTH="15%" NOWRAP class="fbt">{t}Typ{/t}:</TD>
+                                        <TD WIDTH="5%" NOWRAP class="fbt">{t}Proporcje{/t}:</TD>
+                                        <TD WIDTH="10%" NOWRAP class="fbt">{t}Video{/t}:</TD>
+                                        <TD WIDTH="60%" ALIGN="RIGHT" class="frightu">&nbsp;</TD>
+                                </TR>
+				{cycle values="light,lucid" print=false}
+				{foreach from=$iptv_device item=iptvdevice}
+				<TR class="{cycle}" onmouseover="addClass(this, 'highlight')" onmouseout="removeClass(this, 'highlight')">
+					<TD WIDTH="10%" NOWRAP>{$iptvdevice.mac}</TD>
+					<TD WIDTH="15%" NOWRAP>{$iptvdevice.type}</TD>
+					<TD WIDTH="5%" NOWRAP>{$iptvdevice.display}</TD>
+					<TD WIDTH="10%" NOWRAP>{$iptvdevice.ratio}</TD>
+					<TD WIDTH="60%" ALIGN="RIGHT" NOWRAP><A onClick="return confirmLink(this, '{t}czyusunacsprzet{/t}')" HREF="?m=acustomersprzetdel&customersprzetid={$customersprzet.id}&id={$customerinfo.id}" {tip text="usunsprzet"}>{t}Delete{/t} <IMG SRC="img/delete.gif" ALT=""></A></TD>
+				</TR>
+				{foreachelse}
+				<TR>
+					<TD align="center" WIDTH="100%" colspan="5">
+						<p><B>{t}brakurzadzen{/t}</B></p>
+					</TD>
+				</TR>
+				{/foreach}
+			</TABLE>
+			<TABLE cellpadding="5" cellspacing="0" WIDTH="100%">
+				<TR class="dark">
+					<TD WIDTH="98%" NOWRAP class="fleftu"><B>Pakiety</B></TD>
+                                        <TD WIDTH="2%" ALIGN="RIGHT" class="frightu">&nbsp;</TD>
+				</TR>
+				{if $iptv_package}
+				<TR class="lucid" onmouseover="addClass(this, 'highlight')" onmouseout="removeClass(this, 'highlight')">
+					<TD WIDTH="98%" NOWRAP>{foreach name=nazwa from=$iptv_package item=package}{$package}{if $smarty.foreach.nazwa.last != true}, {/if}{/foreach}</TD>
+					<TD WIDTH="2%" ALIGN="RIGHT" NOWRAP></TD>
+				</TR>
+				{else}
+				<TR>
+					<TD align="center" WIDTH="100%" colspan="5">
+						<p><B>{t}brakserwisow{/t}</B></p>
+					</TD>
+				</TR>
+				{/if}
+			</TABLE>
+			<TABLE cellpadding="5" cellspacing="0" WIDTH="100%">
+                                <TR class="dark">
+                                        <TD WIDTH="10%" NOWRAP class="fleftu"><B>{t}Serwis{/t}:</B></TD>
+                                        <TD WIDTH="15%" NOWRAP class="fbt">{t}Aktywacja{/t}:</TD>
+                                        <TD WIDTH="15%" NOWRAP class="fbt">{t}Deaktywacja{/t}:</TD>
+                                        <TD WIDTH="60%" ALIGN="RIGHT" class="frightu">&nbsp;</TD>
+                                </TR>
+				{cycle values="light,lucid" print=false}
+				{foreach from=$iptv_service item=iptvservice}
+				<TR class="{cycle}" onmouseover="addClass(this, 'highlight')" onmouseout="removeClass(this, 'highlight')">
+					<TD WIDTH="10%" NOWRAP>{$iptvservice.name}</TD>
+					<TD WIDTH="15%" NOWRAP>{$iptvservice.from}</TD>
+					<TD WIDTH="15%" NOWRAP>{$iptvservice.to}</TD>
+					<TD WIDTH="60%" ALIGN="RIGHT" NOWRAP></TD>
+				</TR>
+				{foreachelse}
+				<TR>
+					<TD align="center" WIDTH="100%" colspan="5">
+						<p><B>{t}brakserwisow{/t}</B></p>
+					</TD>
+				</TR>
+				{/foreach}
+			</TABLE>
+		</TD>
+	</TR>
+</TABLE>
+{literal}<SCRIPT>
+<!--
+	if(getCookie('iptvpanel')=='1')
+	{
+		document.getElementById('iptvpanel').style.display = '';
+	}
+//-->
+</SCRIPT>{/literal}

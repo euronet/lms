@@ -6,7 +6,6 @@ nbproject/private
 lms.ini
 backups/*
 documents/*
-!documents/templates
 cache/*
 contrib/LMS2Nagios-php/generated/*
 lib/teryt/*

@@ -70,7 +70,7 @@ if ($nodeinfo['netdev'] == 0)
 	$netdevices = $LMS->GetNetDevNames();
 else
 	$netdevices = $LMS->GetNetDev($nodeinfo['netdev']);
-
+$netdevips = $LMS->GetNetDevIPs($nodeinfo['netdev']);
 $layout['pagetitle'] = trans('Node Info: $a', $nodeinfo['name']);
 
 include(MODULES_DIR . '/nodexajax.inc.php');
@@ -121,6 +121,7 @@ $SMARTY->assign('nodegroups', $nodegroups);
 $SMARTY->assign('othernodegroups', $othernodegroups);
 $SMARTY->assign('nodeinfo', $nodeinfo);
 $SMARTY->assign('objectid', $nodeinfo['id']);
+$SMARTY->assign('netdevips',$netdevips);
 $SMARTY->display('node/nodeinfo.html');
 
 ?>

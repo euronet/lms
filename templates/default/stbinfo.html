@@ -1,0 +1,15 @@
+{include file="header.html"}
+<!--// $Id$ //-->
+<H1>{$layout.pagetitle}</H1>
+<p style="color:red">{$err}</p>
+{if $one}
+<p>[uptime]</p>
+{$one}
+<p>[toish getstatus]</p>
+{$two}
+<p>[toish getobjectall]</p>
+{$three}
+
+<p style="color:red"><br>okay: logged out...</p>
+{/if}
+{include file="footer.html"}

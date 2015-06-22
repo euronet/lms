@@ -447,6 +447,144 @@
 			{if $customerinfo.moddate}{$customerinfo.modifiedby}, {$customerinfo.moddateh}{else}-{/if}
 		</TD>
 	</TR>
+ <TR CLASS="LIGHT">
+               <TD WIDTH="1%">
+                       <IMG SRC="img/uprate.gif" ALT="">
+               </TD>
+               <TD WIDTH="1%">
+                       <B>{t}Przyspieszenie stazowe{/t}</b><br>
+			<A HREF="javascript:changestazowe()">Przelicz stazowe</a><br> 
+			<!--<A HREF="javascript:changestazowe10p()">+10% do 25 dnia</a><br>-->
+			<A HREF="javascript:zerujstazowe()">Wyzeruj stazowe</a> 
+               </TD>
+               <TD WIDTH="98%">
+                       {if $customerinfo.stazowe}<b>+ {$customerinfo.stazowe}%</b>{else}nieaktywne{/if}
+		</TD>
+	</TR>
+       <TR CLASS="LIGHT">
+               <TD WIDTH="1%">
+                       <IMG SRC="img/uprate.gif" ALT="">
+               </TD>
+               <TD WIDTH="1%">
+                       <B>{t}Przyspieszenie nocne{/t}</b><br>
+			<A HREF="javascript:changenocne()">Przelicz nocne</a><br> 
+			<A HREF="javascript:zerujnocne()">Wyzeruj nocne</a> 
+               </TD>
+               <TD WIDTH="98%">
+                       {if $customerinfo.nocka}<b>aktywne</b>{else}<red>nieaktywne</red>{/if}
+		</TD>
+	</TR>
+       <TR CLASS="LIGHT">
+               <TD WIDTH="1%">
+                       <IMG SRC="img/uprate.gif" ALT="">
+               </TD>
+               <TD WIDTH="1%">
+                       <B>{t}Przyspieszenie dzienne{/t}</b><br>
+			<A HREF="javascript:changedzienne()">Przelicz dzienne</a><br> 
+			<A HREF="javascript:zerujdzienne()">Wyzeruj dzienne</a> 
+               </TD>
+               <TD WIDTH="98%">
+                       {if $customerinfo.bonus}<b>+ 20%</b>{else}<red>nieaktywne</red>{/if}
+		</TD>
+	</TR>
+       <TR CLASS="LIGHT">
+               <TD WIDTH="1%">
+                       <IMG SRC="img/downrate.gif" ALT="">
+               </TD>
+               <TD WIDTH="1%">
+                       <B>{t}Aktualne Downrate{/t}
+               </TD>
+               <TD WIDTH="98%">
+                       <B>{if $customerinfo.downrate}<red>{$customerinfo.downrate} kbit</red> {else}0 kbit{/if}</b> (64 kbit min)
+		</TD>
+	</TR>
+       <TR CLASS="LIGHT">
+               <TD WIDTH="1%">
+                       <IMG SRC="img/uprate.gif" ALT="">
+               </TD>
+               <TD WIDTH="1%">
+                       <B>{t}Aktualne Uprate{/t}
+               </TD>
+               <TD WIDTH="98%">
+                       <B>{if $customerinfo.uprate}<blue>{$customerinfo.uprate} kbit</blue> {else}0 kbit{/if}</b> (64 kbit min)
+		</TD>
+	</TR>
+       <TR CLASS="LIGHT">
+               <TD WIDTH="1%">
+                       <IMG SRC="img/downrate.gif" ALT="">
+               </TD>
+               <TD WIDTH="1%">
+                       <B>{t}Zwolnienie{/t}
+               </TD>
+               <TD WIDTH="98%">
+                       {if $customerinfo.quota}<FONT class="alert">{$customerinfo.quota}%</FONT> <IMG SRC="img/exclamation.gif" ALT="">{else}nieaktywne{/if}
+		</TD>
+	</TR>
+  <TR CLASS="LIGHT">
+               <TD WIDTH="1%">
+                       <IMG SRC="img/wait.gif" ALT="">
+               </TD>
+               <TD WIDTH="1%">
+                       <B>{t}<a href="?m=przelicz_pasmo&id={$customerinfo.id}">Przelicz pasmo</a>{/t}
+               </TD>
+               <TD WIDTH="98%">
+                 </TD>
+	</TR>
+
+        <TR><TD></TD></TR>
+        <TR><TD></TD></TR>
+        <TR CLASS="LIGHT">
+                <TD WIDTH="1%">
+                        <IMG SRC="img/info.gif" ALT="">
+                </TD>
+                <TD WIDTH="1%" NOWRAP>
+                        <B>Uprzykrzacz:</B>
+                </TD>
+                <TD WIDTH="98%">
+                        {if $customerinfo.odlaczenieaktywne}<img src="img/exclamation.gif">W&#322;&#261;czony{else}Wy&#322;&#261;czony{/if}
+                        &nbsp;&nbsp;&nbsp;&nbsp;<A HREF="javascript:changevalue()"><img src="img/warningmix.gif">&nbsp;Zmie&#324;</a>
+                </TD>
+        </TR>
+        <TR CLASS="LIGHT">
+                <TD WIDTH="1%">
+                        <IMG SRC="img/options.gif" ALT="">
+                </TD>
+                <TD WIDTH="1%">
+                        <B>Akcja:</B>
+                </TD>
+                <TD WIDTH="98%">
+                        <form name="form1">
+                        <INPUT TYPE="radio" NAME="msg[type]" ID="operation0" VALUE="0" {if $customerinfo.typodlaczenia == 0}CHECKED{/if} onmouseover="return overlib('Wybierz typ operacji',HAUTO,VAUTO,OFFSETX,15,OFFSETY,15);" onmouseout="nd();"><A HREF="javascript:checkElement('operation0')">brak</a>
+                        <INPUT TYPE="radio" NAME="msg[type]" ID="operation1" VALUE="1" {if $customerinfo.typodlaczenia == 1}CHECKED{/if} onmouseover="return overlib('Wybierz typ operacji',HAUTO,VAUTO,OFFSETX,15,OFFSETY,15);" onmouseout="nd();"><A HREF="javascript:checkElement('operation0')">p&#322;atno&#347;ci</a>
+                        <INPUT TYPE="radio" NAME="msg[type]" ID="operation2" VALUE="2" {if $customerinfo.typodlaczenia == 2}CHECKED{/if} onmouseover="return overlib('Wybierz typ operacji',HAUTO,VAUTO,OFFSETX,15,OFFSETY,15);" onmouseout="nd();"><A HREF="javascript:checkElement('operation0')">wiadomo&#347;&#263;</a>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<A HREF="javascript:changetype()"><img src="img/confirm.gif">&nbsp;Zmie&#324;</a>
+                        </form>
+                </TD>
+        </TR>
+        <TR CLASS="LIGHT">
+                <TD WIDTH="1%">
+                        <IMG SRC="img/note.gif" ALT="">
+                </TD>
+                <TD WIDTH="1%">
+                        <B>Klikni&#281;cia:</B>
+                </TD>
+                <TD WIDTH="98%">
+                        {if !$customerinfo.licznikodlaczen}brak{else}{$customerinfo.licznikodlaczen}{/if}
+                        &nbsp;&nbsp;&nbsp;&nbsp;<A HREF="javascript:clearcounter()"><img src="img/eraser.gif">&nbsp;Wyzeruj</a>
+                </TD>
+        </TR>
+        <TR CLASS="LIGHT">
+                <TD WIDTH="1%">
+                        <IMG SRC="img/time.gif" ALT="">
+                </TD>
+                <TD WIDTH="1%" NOWRAP>
+                        <B>Ostatnie klikni&#281;cie:</B>
+                </TD>
+                <TD WIDTH="98%">
+                        {if !$customerinfo.lastclickdate}brak{else}{$customerinfo.lastclickdate|date_format:"%Y/%m/%d %H:%M:%S"}{/if}
+                        &nbsp;&nbsp;&nbsp;&nbsp;<A HREF="javascript:clearlastclick()"><img src="img/eraser.gif">&nbsp;Wyzeruj</a>
+                </TD>
+        </TR>
 <TR CLASS="LIGHT">
                 <TD WIDTH="1%">
                         <IMG SRC="img/recover.gif" ALT="">

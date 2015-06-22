@@ -38,9 +38,10 @@ class LMSDocumentManager extends LMSManager implements LMSDocumentManagerInterfa
             return NULL;
 
         if ($list = $this->db->GetAll('SELECT c.docid, d.number, d.type, c.title, c.fromdate, c.todate, 
-			c.description, c.filename, c.md5sum, c.contenttype, n.template, d.closed, d.cdate
+			c.description, c.filename, c.md5sum, c.contenttype, n.template, d.closed, d.cdate, u.name
 			FROM documentcontents c
 			JOIN documents d ON (c.docid = d.id)
+			JOIN users u ON (d.userid = u.id)
 			JOIN docrights r ON (d.type = r.doctype AND r.userid = ? AND (r.rights & 1) = 1)
 			LEFT JOIN numberplans n ON (d.numberplanid = n.id)
 			WHERE d.customerid = ?
