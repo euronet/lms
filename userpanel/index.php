@@ -23,7 +23,7 @@
  *  $Id$
  */
 // REPLACE THIS WITH PATH TO YOUR CONFIG FILE
-$CONFIG_FILE = (is_readable('lmsgpon.ini')) ? 'lmsgpon.ini' : DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'lms' . DIRECTORY_SEPARATOR . 'lmsgpon.ini';
+$CONFIG_FILE = (is_readable('lms.ini')) ? 'lms.ini' : DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'lms' . DIRECTORY_SEPARATOR . 'lms.ini';
 // PLEASE DO NOT MODIFY ANYTHING BELOW THIS LINE UNLESS YOU KNOW
 // *EXACTLY* WHAT ARE YOU DOING!!!
 // *******************************************************************
