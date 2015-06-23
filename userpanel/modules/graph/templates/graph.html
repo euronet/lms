@@ -1,0 +1,33 @@
+{include file="header.html"}
+<!--// $Id: graph.html,v 1.0 2010/03/23 21:00:00 emers Exp $ //-->
+<table width="100%" cellpadding="10"><tr><td>
+{box title="Wykresy wykorzystania internetu"}
+{if $graph.show}
+{if $graph_day eq 0}
+<b>Wykres dzienny</b><br/>
+<img src="{$graph.urld}" alt="">
+<br/><br/>
+{/if}
+{if $graph_week eq 0}
+<b>Wykres tygodniowy</b><br/>
+<img src="{$graph.urlw}" alt="">
+<br/><br/>
+{/if}
+{if $graph_month eq 0}
+<b>Wykres miesi&#281;czny</b><br/>
+<img src="{$graph.urlm}" alt="">
+<br/><br/>
+{/if}
+{if $graph_year eq 0}
+<b>Wykres roczny</b><br/>
+<img src="{$graph.urly}" alt="">
+<br/><br/>
+{/if}
+{else}
+<br/><br/><br/>
+<div style="text-align:center"><b>{t}Brak danych{/t}</b></div>
+<br/><br/><br/>
+{/if}
+{/box}
+</td></tr></table>
+{include file="footer.html"}

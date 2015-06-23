@@ -1,0 +1,23 @@
+{include file="header.html"}
+<!--// $Id: setup.html,v 1.0 2010/03/23 21:00:00 emers Exp $ //-->
+<h1>{$layout.pagetitle}</h1>
+<TABLE WIDTH="100%" CELLPADDING="3">
+    <TR CLASS="DARK"><TD CLASS="fall"><B>{t}Module Configuration:{/t}</B></TD></TR>
+    <TR CLASS="light"><TD CLASS="fall">
+	<FORM NAME="moduleconfig" METHOD="POST" ACTION="?m=userpanel&module=graph&f=submit_setup">
+	    <INPUT CLASS="box light" TYPE="checkbox" NAME="graph_day" ID="graph_day" VALUE="1" {if $graph_day eq 1}CHECKED{/if}>
+		<A HREF="javascript:checkElement('graph_day');">{t}Ukryj wykres dzienny{/t}</A><br>
+	    <INPUT CLASS="box light" TYPE="checkbox" NAME="graph_week" ID="graph_day" VALUE="1" {if $graph_week eq 1}CHECKED{/if}>
+		<A HREF="javascript:checkElement('graph_week');">{t}Ukryj wykres tygodniowy{/t}</A><br>
+	    <INPUT CLASS="box light" TYPE="checkbox" NAME="graph_month" ID="graph_month" VALUE="1" {if $graph_month eq 1}CHECKED{/if}>
+		<A HREF="javascript:checkElement('graph_month');">{t}Ukryj wykres miesi&#281;czny{/t}</A><br>
+	    <INPUT CLASS="box light" TYPE="checkbox" NAME="graph_year" ID="graph_year" VALUE="1" {if $graph_year eq 1}CHECKED{/if}>
+		<A HREF="javascript:checkElement('graph_year');">{t}Ukryj wykres roczny{/t}</A><br>
+	<p align="right">
+	    <A HREF="?m=userpanel">{t}Cancel{/t} <IMG SRC="img/cancel.gif" ALT=""></A>
+	    <A HREF="javascript:document.moduleconfig.submit();" ACCESSKEY="S">{t}Submit{/t} <IMG SRC="img/save.gif" ALT=""></A>
+	</p>
+	</FORM>
+    </TD></TR>
+</TABLE>
+{include file="footer.html"}

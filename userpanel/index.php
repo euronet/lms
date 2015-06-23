@@ -23,7 +23,7 @@
  *  $Id$
  */
 // REPLACE THIS WITH PATH TO YOUR CONFIG FILE
-$CONFIG_FILE = (is_readable('lms.ini')) ? 'lms.ini' : DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'lms' . DIRECTORY_SEPARATOR . 'lms.ini';
+$CONFIG_FILE = (is_readable('lmsgpon.ini')) ? 'lmsgpon.ini' : DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'lms' . DIRECTORY_SEPARATOR . 'lmsgpon.ini';
 // PLEASE DO NOT MODIFY ANYTHING BELOW THIS LINE UNLESS YOU KNOW
 // *EXACTLY* WHAT ARE YOU DOING!!!
 // *******************************************************************
@@ -220,6 +220,23 @@ if($SESSION->islogged)
 }
 else
 {
+  if($customerid = $LMS->GetNodeOwner($LMS->GetNodeIDByIP($_SERVER[REMOTE_ADDR])))
+        {
+    		$balance = $LMS->GetCustomerBalanceList($customerid);
+                $customerinfo = $LMS->GetCustomer($customerid);
+                $assignments = $LMS->GetCustomerAssignments($customerid);
+        }
+
+        $komputerid = $LMS->GetNodeIDByIP($_SERVER[REMOTE_ADDR]);
+        $komputer = $LMS->GetNode($komputerid);
+                        
+        $SMARTY->assign('adresip', $_SERVER['REMOTE_ADDR']);
+        $SMARTY->assign('customerinfo', $customerinfo);
+        $SMARTY->assign('assignments', $assignments);
+        $SMARTY->assign('balance', $balance);
+        $SMARTY->assign('komputerid', $komputerid);
+        $SMARTY->assign('komputer', $komputer);
+
         $SMARTY->assign('error', $SESSION->error);
         $SMARTY->assign('target','?'.$_SERVER['QUERY_STRING']);
         $SMARTY->display('login.html');

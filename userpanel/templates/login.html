@@ -1,141 +1,131 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<!--// $Id$ //-->
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{$_ui_language}">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
 <head>
-  <meta content="text/html; charset={$LANGDEFS.$_ui_language.charset}" http-equiv="content-type" />
-  <title>{trans("Virtual Customer Service")}</title>
-<link type="text/css" rel="stylesheet" href="{stylefile}" />
-</head>
-<body>
-<script type="text/javascript">
-<!--
-	function switch_form(type) {
-		if (type == 'login') {
-			document.getElementById('logindata').style.display = '';
-			document.getElementById('reminddata').style.display = 'none';
-		} else {
-			document.getElementById('logindata').style.display = 'none';
-			document.getElementById('reminddata').style.display = '';
-		}
-	}
-
-	function show_email_phone(type) {
-		if (type == 'email') {
-			document.getElementById('email').style.display = '';
-			document.getElementById('phone').style.display = 'none';
-		} else {
-			document.getElementById('email').style.display = 'none';
-			document.getElementById('phone').style.display = '';
-		}
-	}
-//-->
-</script>
-<div class="login">
-<table style="vertical-align: middle; width:100%; height: 100%; margin:auto">
-    <tr>
-	<td align="center">
-	    <table>
-		<tr>
-		    <td>
-			{img src="logo.jpg" alt=""}
-		    </td>
-		    <td>&nbsp;</td>
-		    <td align="center">
-			{box title="VCS"}
-			<div class="text-center bold nobr">{trans("Virtual Customer Service")}</div><br />
-			{if $error}<div style="color: red;" class="text-center bold">{$error}</div>{else}&nbsp;{/if}
-			<br /><br />
-			<form id="login" method="post" action="{$target}">
-			<table id="logindata" style="height: 100%; width: 100%;">
-				<tr>
-					<td class="text-right bold nobr">
-						{trans("Customer ID:")}
-					</td>
-					<td class="text-left">
-						<input type="text" name="loginform[login]" style="width: 50pt;" />
-					</td>
-				</tr>
-				<tr>
-					<td class="text-right bold nobr">
-						{trans("PIN:")}
-					</td>
-					<td class="text-left">
-						<input type="password" name="loginform[pwd]" style="width: 50pt;" />
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2" class="text-center">
-						<br /><input type="submit" name="loginform[submit]" class="bold" value="{trans("Login")}" />
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2" class="text-center bold nobr">
-						<br /><a href="javascript:switch_form('remind');">{trans("Remind credentials")}</a>
-					</td>
-				</tr>
-			</table>
-			</form>
-			<form id="remind" method="post" action="{$target}">
-			<table id="reminddata" style="height: 100%; width: 100%; display: none;">
-				<tr>
-					<td colspan="2" class="text-center bold nobr">
-						<input type="radio" id="emailradio" name="remindform[type]" value="1" onclick="javascript:show_email_phone('email');" checked /><label for="emailradio">{trans("E-mail")}</label>
-						<input type="radio" id="smsradio" name="remindform[type]" value="2" onclick="javascript:show_email_phone('phone');" /><label for="smsradio">{trans("SMS")}</label>
-						<br />&nbsp;
-					</td>
-				</tr>
-				<tr id="email">
-					<td class="text-right bold nobr">
-						{trans("E-Mail:")}
-					</td>
-					<td class="text-left">
-						<input type="text" name="remindform[email]" style="width: 120pt;" />
-					</td>
-				</tr>
-				<tr id="phone" style="display: none;">
-					<td class="text-right bold nobr">
-						{trans("Phone:")}
-					</td>
-					<td class="text-left">
-						<input type="text" name="remindform[phone]" style="width: 120pt;" />
-					</td>
-				</tr>
-				<tr>
-					<td class="text-right bold nobr">
-						{trans("SSN or TEN:")}
-					</td>
-					<td class="text-left">
-						<input type="text" name="remindform[ten]" style="width: 120pt;" />
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2" class="text-center">
-						<br /><input type="submit" name="remindform[submit]" class="bold" value="{trans("Remind")}" />
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2" class="text-center bold nobr">
-						<br /><a href="javascript:switch_form('login');">{trans("Login form")}</a>
-					</td>
-				</tr>
-			</table>
-			</form>
-			{/box}
-		    </td>
-    		</tr>
-	    </table>
-	    <div class="copyrights"><b>LMS Userpanel {$layout.upv}</b><br/>
-	    {trans("This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2.")}<br/>
-	    {trans("For more information see")} <a href="doc/COPYING">doc/COPYING</a> {trans("and")} <a href="doc/AUTHORS">doc/AUTHORS</a>
-	    </div>
-	</td>
-    </tr>
-</table>
+<title>Euronet - Wirtualne Biuro Obslugi Klienta</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Pragma" content="no-cache">
+<meta name="Keywords" content="euronet, euro-net, internet, biaystok, bialystok, internet provider">
+<meta name="Description" content="Euronet - Wirtualne Biuro Obslugi Klienta">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<link rel="SHORTCUT ICON" href="favicon.ico">
+<link rel="stylesheet" type="text/css" href="style.css">
 <script type="text/javascript">
 <!--
 document.forms['login'].elements['loginform[login]'].focus();
-//-->
+-->
 </script>
-</div>
+</head>
+<body bgcolor="#f6f4e8" text="#000000" link="#0000ff" vlink="#ff00ff" alink="#000000">
+<table align="center" border="0" width="800" cellspacing="0" cellpadding="0">
+<tr><td align="center"><img src="baner_userpanel.jpg" alt="baner"></td></tr>
+</table>
+<table class="lmsbox" style="border: dashed 1px #deddc9;" align="center" border="0" width="800" cellspacing="0" cellpadding="2">
+
+<tr><td colspan="3" align="center" class="tytul"><br>
+Informacje o p&#322;atno&#347;ciach
+</td></tr>
+
+<tr><td colspan="3" width="60%" align="center" class="jasny9">
+Zaloguj si&#281; by obejrzec swoje p&#322;atno&#347;ci<hr>
+</td></tr>
+
+{if $customerinfo}
+<tr>
+<td width="50%" valign="top" align="left">
+<font class="tytul13">ID: {$customerinfo.id|string_format:"%04d"}</font><br>
+<font class="tytul13">PIN:</font> <font class="jasny9">dost&#281;pny na umowie</font><br>
+<font class="tytul13">IP: {$adresip}</font><br>
+{if $customerinfo.stazowe > 0}
+<font class="tytul13">Bonusy sta&#380;owe</font> po 2 roku umowy przy term. op&#322;atach<font class="tytul13"> : {if $customerinfo.stazowe > 0}<FONT COLOR="GREEN"> + {$customerinfo.stazowe} %</font>{else}<FONT COLOR="RED">wy&#322;&#261;czone</font>{/if}</font><br>
+<font class="tytul13">Bonusy dzienne</font> p&#322;atno&#347;&#263; do 3-go<font class="tytul13"> : {if $customerinfo.bonus > 0}<FONT COLOR="GREEN"> + 20 %</font>{else}<FONT COLOR="RED">wy&#322;&#261;czone</font>{/if}</font><br>
+<font class="tytul13">Bonusy "wi&#281;ksza cz&#281;&#347;&#263; doby" </font> zgodnie z umow&#261;<font class="tytul13"></font><br>
+{/if}
+{*<font class="tytul13">Ostatnie ksi&#281;gowanie: {include file="data.html"}</font>*}
+</td>
+
+<td width="20%" valign="middle" align="right" bgcolor="#deddc9" style="border-left: solid 1px #deddc9;">
+<font class="tytul">Saldo:</font><br>
+<font class="tytul">{if $customerinfo.balance < 0}<FONT COLOR="RED"><B>{$customerinfo.balance|money_format}</B>{else}{$customerinfo.balance|money_format}{/if}</font>
+</td>
+
+<td rowspan="2" width="30%" align="center" valign="top">
+ <table width="28%" cellpadding="3" bgcolor="#DDDDDD"  valign="top" style="border:solid; border-color: #940000; border-width: 2px;">
+  <tr><td>
+   <div style="white-space: nowrap; text-align: center;"><b>{t}Virtual Customer Service{/t}</b></div><br/>
+    {if $error}<div style="color:red;text-align: center;"><b>{$error}</b></div>{else}&nbsp;{/if}
+    <br/><br/>
+    <form id="login" method="post" action="?">
+
+     <table style="height: 100%; width: 100%;">
+      <tr>
+       <td align="right" style="white-space: nowrap;">
+        <b>{t}Customer ID:{/t}</b>
+       </td>
+       <td align="left">
+        {$customerinfo.id|string_format:'%04d'}
+        <input type="hidden" value="{$customerinfo.id|string_format:'%04d'}" name="loginform[login]" style="width: 50pt" />
+       </td>
+      </tr>
+      <tr>
+       <td align="right" style="white-space: nowrap;">
+        <b>{t}PIN:{/t}</b>
+       </td>
+       <td align="left">
+        <input type="password" name="loginform[pwd]" style="width: 50pt" />
+       </td>
+      </tr>
+      <tr>
+       <td colspan="2" align="center">
+        <br/><input type="submit" name="loginform[submit]" style="font-weight: bold;" value="{t}Login{/t}"/>
+       </td>
+      </tr>
+     </table>
+    </form>
+  </td></tr>
+ </table>
+<br><br>
+</td>
+</tr>
+<tr><td colspan="2" valign="top" align="left" bgcolor="#eeedd9" style="border-top: solid 1px #deddc9;">
+<br><br>
+<b>Ile mam op&#322;aca&#263;?</b><br>
+Podstawowa stawka abonamentowa jest zawarta w umowie. Mog&#261; by&#263; dodane jednak inne op&#322;aty, np: za aktywacj&#281;, wyr&oacute;wnanie za niepe&#322;ny
+miesi&#261;c, lub dodatkowe komputery. Informacje o tym s&#261; dost&#281;pne telefonicznie w Biurze Obs&#322;ugi Klienta (namiary na dole strony), lub w
+Wirtualnym Biurze Obs&#322;ugi Klienta. By zalogowa&#263; si&#281; do tego drugiego trzeba wpisa&#263; PIN w ramce po prawej stronie i przej&#347;&#263; do dzia&#322;u
+Finanse w tabeli Twoje taryfy.<br><br>
+<b>Jak mam op&#322;aca&#263;?</b><br>
+Wed&#322;ug umowy p&#322;atno&#347;ci powinny by&#263; dokonywane do 10-go dnia ka&#380;dego miesi&#261;ca z g&oacute;ry przelewem bankowym. Przy korzystaniu z bankowo&#347;ci
+wirtualnej i/lub zlecenia sta&#322;ego, w tre&#347;ci przelewu (lub w uwagach) prosz&#281; wpisa&#263; swoje dane adresowe, je&#347;li jest inny, to adres
+pod&#322;&#261;czenia internetu, oraz najlepiej numer identyfikacyjny (widoczny wy&#380;ej). Miesi&#261;c i rok, za jaki jest p&#322;acony abonament, nie jest 
+wymagany. Numer naszego konta jest w umowie, na www.euro-net.pl i w stopce na dole strony. Przyk&#322;ad:<br><br>
+<table width="90%" style="border:solid; border-color: #940000; border-width: 1px;" align="center" bgcolor="#deddc9" cellpadding="0" cellspacing="3">
+<tr><td>
+ID: {$customerinfo.id|string_format:"%04d"}, Jan Kowalski, ul. Lipowa 1m12 15-123 Bialystok
+</td></tr>
+</table><br>
+Mo&#380;na r&oacute;wnie&#380; op&#322;aca&#263; ksi&#261;&#380;eczk&#261; abonamentow&#261; w dowolnym punkcie przyjmuj&#261;cym pieni&#261;dze, typu banki, agencje PKO, poczta. Prowizje za
+wp&#322;aty zale&#380;&#261; od okienka. Ksi&#261;&#380;eczki mo&#380;na odebra&#263; w Biurze Obs&#322;ugi Klienta.<br>
+<br>
+<b>Kiedy ksi&#281;gowane s&#261; wp&#322;aty?</b><br>
+Wp&#322;aty ksi&#281;gujemy kilka razy dziennie. Ksi&#281;gowanie odbywa si&#281; z dat&#261; wp&#322;ywu pieni&#281;dzy na nasze konto bankowe.<br><br>
+Przy wp&#322;atach prosz&#281; bra&#263; pod uwag&#281; op&oacute;&#378;nienia punkt&oacute;w kasowych w przekazywaniu pieni&#281;dzy na nasze konto. Si&#281;gaj&#261; one od jednego dnia 
+(banki, agencje PKO), poprzez trzy (poczta), a&#380; do siedniu (niezale&#380;ne punkty finansowe).<br><br>
+<b>Jak mog&#281; obejrze&#263; swoje p&#322;atno&#347;ci?</b><br>
+Wszystkie dokonane p&#322;atno&#347;ci, jak te&#380; faktury, s&#261; do wgl&#261;du w Wirtualnym Biurze Obs&#322;ugi Klienta. Prosz&#281; w ramce obok wpisa&#263; sw&oacute;j PIN, 
+zalogowa&#263; si&#281; i wybra&#263; zak&#322;adk&#281; Finanse.<br><br>
+<br>
+<br>
+</td></tr>
+<tr><td colspan="3" valign="top" align="center" bgcolor="#eeedd9" style="border-top: solid 1px #deddc9;">
+<b>Euronet Norbert Saniewski spółka jawna.<br>
+ul. Upalna 5A lok 10, 15-668 Bia&#322;ystok<br></b>
+tel: 856883000 (czynne pn.-pt. 9.00-17.00)<br>
+fax: 856883003<br>
+kom: 503 135 960<br>
+e-mail: biuro@euro-net.pl, www.euro-net.pl<br>
+Bank PKO BP S.A. I O/Bia&#322;ystok Nr 82 1020 1332 0000 1502 0029 3548<br>
+</td></tr>
+{/if}
+</table>
 </body>
 </html>

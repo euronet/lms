@@ -1,0 +1,22 @@
+{include file="header.html"}
+<!--// $Id: setup.html,v 1.0 2010/03/23 21:00:00 emers Exp $ //-->
+<h1>{$layout.pagetitle}</h1>
+<TABLE WIDTH="100%" CELLPADDING="3">
+    <TR CLASS="DARK"><TD CLASS="fall"><B>{t}Module Configuration:{/t}</B></TD></TR>
+    <TR CLASS="light"><TD CLASS="fall">
+	<FORM NAME="moduleconfig" METHOD="POST" ACTION="?m=userpanel&module=voip&f=submit_setup">
+		Wybierz grup&#281;, kt&#243;rej ma dotyczy&#263;&nbsp;
+		<SELECT NAME="voip_group" {tip text="Wybierz grup&#281;, kt&#243;rej ma dotyczy&#263;"}>
+                   <OPTION value="0" SELECTED>wszystkich</OPTION>
+                       {foreach from=$group item=group}
+                       <OPTION value="{$group.id}"{if $group.id == $voip_group} SELECTED{/if}>{$group.name}</OPTION>
+                       {/foreach}
+               </SELECT><br>
+	<p align="right">
+	    <A HREF="?m=userpanel">{t}Cancel{/t} <IMG SRC="img/cancel.gif" ALT=""></A>
+	    <A HREF="javascript:document.moduleconfig.submit();" ACCESSKEY="S">{t}Submit{/t} <IMG SRC="img/save.gif" ALT=""></A>
+	</p>
+	</FORM>
+    </TD></TR>
+</TABLE>
+{include file="footer.html"}

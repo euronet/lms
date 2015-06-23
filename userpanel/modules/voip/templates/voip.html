@@ -1,0 +1,108 @@
+{include file="header.html"}
+<!--// $Id: voip.html,v 1.0 2010/07/23 21:00:00 emers Exp $ //-->
+<table width="100%" cellpadding="10">
+<tr><td>
+{box title="Karta telefonu stacjonarnego"}
+{if $voip.show}
+<table width="200px" cellpadding="3" align="left">
+        <tr class="darkest">
+            <td width="80%" class="nobr" align="left"><b>Pakiet</b></td>
+            <td width="20%" class="nobr" align="right"><b>Cena</b></td>
+        </tr>
+{foreach from=$tariff item=tariffi}
+        <tr class="dark">
+            <td width="80%" class="nobr" align="left">{$tariffi.name}</td>
+            <td width="20%" class="nobr" align="right">{$tariffi.value|money_format}</td>
+        </tr>
+{/foreach}
+</table>
+&nbsp;&nbsp;
+<table width="200px" cellpadding="3" align="left">
+        <tr class="darkest">
+            <td width="80%" colspan="2" class="nobr" align="left"><b>Stan us&#322;ug numeru {$bil_cfg.number}</b></td>
+        </tr>
+{foreach from=$linie item=linia}
+{if $linia->numer == $bil_cfg.number}{assign var=darmowe value=$linia->abonament_darmowe}{/if}
+{/foreach}
+        <tr class="dark">
+            <td width="80%" class="nobr" align="right">Darmowe minuty</td>
+            <td width="20%" class="nobr" align="right">{$darmowe}</td>
+        </tr>
+        <tr class="dark">
+            <td width="80%" class="nobr" align="right">Wykorzystane</td>
+            <td width="20%" class="nobr" align="right">{$wykorzystane}</td>
+        </tr>
+</table>
+&nbsp;&nbsp;
+<table width="200px" cellpadding="3" align="left">
+<FORM NAME="voipdetails" METHOD="POST" ACTION="?m=voip">
+        <tr class="darkest">
+            <td width="50%" class="nobr" align="right"><b>Generuj biling dla:</b></td>
+            <td width="50%" class="nobr" align="left"><input type="submit" value="Generuj"></td>
+        </tr>
+        <tr class="dark">
+            <td width="40%" class="nobr" align="right">numer</td>
+            <td width="60%" class="nobr" align="left">
+	        <SELECT NAME="voip_acc">
+		    {foreach from=$voip_acc.accounts item=konto}
+        	    <OPTION value="{$konto.id}"{if $konto.phone == $bil_cfg.number} SELECTED{/if}>{$konto.phone}</OPTION>
+    		    {/foreach}
+		</SELECT>
+            </td>
+        </tr>
+        <tr class="dark">
+            <td width="40%" class="nobr" align="right">za okres</td>
+            <td width="60%" class="nobr" align="lest">
+		<SELECT NAME="month">
+		    <OPTION value="1"{if $bil_cfg.month == 1} SELECTED{/if}>stycze&#324;</OPTION>
+        	    <OPTION value="2"{if $bil_cfg.month == 2} SELECTED{/if}>luty</OPTION>
+        	    <OPTION value="3"{if $bil_cfg.month == 3} SELECTED{/if}>marzec</OPTION>
+        	    <OPTION value="4"{if $bil_cfg.month == 4} SELECTED{/if}>kwiecie&#324;</OPTION>
+        	    <OPTION value="5"{if $bil_cfg.month == 5} SELECTED{/if}>maj</OPTION>
+        	    <OPTION value="6"{if $bil_cfg.month == 6} SELECTED{/if}>czerwiec</OPTION>
+        	    <OPTION value="7"{if $bil_cfg.month == 7} SELECTED{/if}>lipiec</OPTION>
+        	    <OPTION value="8"{if $bil_cfg.month == 8} SELECTED{/if}>sierpie&#324;</OPTION>
+        	    <OPTION value="9"{if $bil_cfg.month == 9} SELECTED{/if}>wrzesie&#324;</OPTION>
+        	    <OPTION value="10"{if $bil_cfg.month == 10} SELECTED{/if}>pa&#378;dziernik</OPTION>
+        	    <OPTION value="11"{if $bil_cfg.month == 11} SELECTED{/if}>listopad</OPTION>
+        	    <OPTION value="12"{if $bil_cfg.month == 12} SELECTED{/if}>grudzie&#324;</OPTION>
+	    </SELECT>&nbsp;
+	    <input type="text" value="{$bil_cfg.year}" name="year" size="3">
+            </td>
+        </tr>
+</FORM>
+</table>
+{else}
+<br/><br/><br/>
+<div style="text-align:center"><b>{t}Ta us&#322;uga nie jest wykupiona{/t}</b></div>
+<br/><br/><br/>
+{/if}
+{/box}
+</td></tr></table>
+{if $voip.show}
+<table width="100%" cellpadding="10">
+<tr><td>
+{box title="Biling"}
+<table width="500px" cellpadding="3" align="center">
+        <tr class="darkest">
+            <td width="30%" align="center">{t}Date:{/t}</td>
+            <td width="30%" align="center">Gdzie</td>
+            <td width="20%" align="center">Czas</td>
+            <td width="20%" align="center">Koszt</td>
+        </tr>
+	{foreach from=$biling item=bilingi}
+        <tr class="dark">
+            <td width="30%" class="nobr">{$bilingi->callStart}</td>
+            <td width="30%" class="nobr">{$bilingi->rcptNr}</td>
+            {math equation="x/3600" x=$bilingi->billsec assign="hours" format="%02d"}
+            {math equation="x/60" x=$bilingi->billsec assign="minutes" format="%02d"}
+            {math equation="x-y*3600-z*60" x=$bilingi->billsec y=$hours z=$minutes assign="secs" format="%02d"}
+            <td width="20%" class="nobr" align="right">{$hours}:{$minutes}:{$secs}</td>
+            <td width="20%" class="nobr">{$bilingi->callCost|money_format}</td>
+        </tr>
+        {/foreach}
+</table>
+{/box}
+</td></tr></table>
+{/if}
+{include file="footer.html"}
