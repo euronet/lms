@@ -125,6 +125,16 @@
 		</TD>
 	</TR>
 {/if}
+{if $customerinfo.rbe neq ""}
+       <TR CLASS="LIGHT">
+               <TD WIDTH="1%">
+                       <IMG SRC="img/node.gif" ALT="">
+               </TD>
+               <TD WIDTH="99%" COLSPAN="2">
+                       {$customerinfo.rbe}
+               </TD>
+       </TR>
+{/if}
 	<TR>
 		<TD WIDTH="1%">
 			<IMG src="img/folder.gif" alt="">
