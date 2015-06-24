@@ -1,5 +1,4 @@
 <?php
-
 $CONFIG['directories']['rrd_dir'] = (!isset($CONFIG['directories']['rrd_dir']) ? $CONFIG['directories']['sys_dir'].'/rrd' : $CONFIG['directories']['rrd_dir']);
 
 define('RRD_DIR', $CONFIG['directories']['rrd_dir']);
@@ -14,7 +13,6 @@ $filerrd = RRD_DIR."/signal_onu_". $_REQUEST['id']. ".rrd";
 
 if (!file_exists($filerrd))
 	die;
-
 $period = isset($_GET['period']) ? $_GET['period'] : '7d';
 if (!preg_match('/^[0-9]+d$/', $period))
 	$period = '7d';
@@ -50,7 +48,7 @@ if($_GET['ext'] == 1) {
       "DEF:signal_min=".$quote."$filerrd".$quote.":Signal:MIN",
       "DEF:signal_max=".$quote."$filerrd".$quote.":Signal:MAX",
       "DEF:oltrx=".$quote."$filerrd".$quote.":oltrx:AVERAGE",
-      "AREA:signal#dcdcdc::",
+      "AREA:signal#dcdcdc",
       "CDEF:max=signal_max,signal,-",
       "CDEF:red=signal_min,signal,-",
       "CDEF:min=signal_min,100,-",
@@ -59,11 +57,11 @@ if($_GET['ext'] == 1) {
       "AREA:max#f1a0a0::STACK",
       "AREA:red#f15858::STACK",
       "AREA:min#f10000:ONU:STACK",
-      "LINE2:signal#000000::",
-      "LINE1:signal_max#888888::",
-      "LINE1:signal_min#888888::",
+      "LINE2:signal#000000",
+      "LINE1:signal_max#888888",
+      "LINE1:signal_min#888888",
 
-      "AREA:off#bbbbbb::",
+      "AREA:off#bbbbbb",
       "GPRINT:signal:MIN:".$quote."Min\: %.1lfdBm\g".$quote,
       "GPRINT:signal:MAX:".$quote."Max\: %.1lfdBm\g".$quote,
       "GPRINT:signal:LAST:".$quote."Last\: %.1lfdBm".$quote,
@@ -96,13 +94,13 @@ if($_GET['ext'] == 1) {
       "DEF:signal=".$quote."$filerrd".$quote.":Signal:AVERAGE",
       "DEF:oltrx=".$quote."$filerrd".$quote.":oltrx:AVERAGE",
       "CDEF:off=signal,-40,EQ,-40,0,IF",
-      "AREA:signal#dcdcdc::",
+      "AREA:signal#dcdcdc",
       "CDEF:red=signal,50,-",
 
-      "LINE2:signal#000000::",
+      "LINE2:signal#000000",
       "AREA:red#f10000::STACK",
-      "AREA:off#bbbbbb::",
-      "LINE1:oltrx#00c080::",
+      "AREA:off#bbbbbb",
+      "LINE1:oltrx#00c080",
       "GPRINT:signal:LAST:".$quote."Last\: ONU rx\: %.1lfdBm   ".$quote,
       "GPRINT:oltrx:LAST:".$quote."OLT rx\: %.1lfdBm    ".$quote,
       "HRULE:-30#aaaaaa:",
@@ -139,5 +137,5 @@ else
 }
 
 imagedestroy($source);
-
+$SMARTY->assign('cmd',$cmd);
 ?>
