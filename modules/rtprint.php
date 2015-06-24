@@ -121,7 +121,7 @@ switch($type)
     		$list = $DB->GetAllByKey('SELECT rttickets.id, createtime, customerid, subject, requestor, '
 			.$DB->Concat('UPPER(customers.lastname)',"' '",'customers.name').' AS customername '
 			.(!empty($_POST['contacts']) || !empty($_GET['contacts'])
-				? ', address, (SELECT phone
+				? ', address, rbe, (SELECT phone
 				FROM customercontacts
 				WHERE customerid = customers.id LIMIT 1) AS phone ' : '')
 		        .'FROM rttickets
