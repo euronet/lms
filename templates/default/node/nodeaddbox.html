@@ -38,7 +38,7 @@
 			<IMG SRC="img/ip.gif" ALT="{trans("IP address:")}">
 		</TD>
 		<TD style="width: 99%;">
-			<INPUT TYPE="TEXT" NAME="nodedataipaddr" VALUE="{$nodedata.ipaddr}" {tip text="Enter IP address" trigger="ipaddr"}> <a href="javascript: void(0);" onClick="return ipchoosewin(document.nodeadd.nodedataipaddr, document.nodeadd.nodedatanetid);" {tip text="Click to select IP from the list"}>&raquo;&raquo;&raquo;</A>
+			<INPUT TYPE="TEXT" NAME="nodedataipaddr" VALUE="{$nodedata.ipaddr}" onblur="setnamefromip(this.value)" {tip text="Enter IP address" trigger="ipaddr"}>  <a href="javascript: void(0);" onClick="return ipchoosewin(document.nodeadd.nodedataipaddr, document.nodeadd.nodedatanetid);" {tip text="Click to select IP from the list"}>&raquo;&raquo;&raquo;</A>
 		</TD>
 	</TR>
 	{if ConfigHelper::checkConfig('phpui.public_ip')}
@@ -365,5 +365,63 @@
 
 	check_teryt('location', true);
 	setNNProject();
+//-->
+</SCRIPT>
+<SCRIPT type="text/javascript">
+<!--
+	document.forms['nodeadd'].elements['nodedata[name]'].focus();
+
+	function GenPasswd()
+	{
+		var passwd = new Array();
+		var items = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		var length = {get_conf('phpui.nodepassword_length', '16')};
+		if (length > 32) length = 32;
+
+		for (var i=0; i<length; i++)
+		{
+			n = Math.floor(Math.random() * items.length);
+			passwd[i] = items.substring(n, n+1);
+		}
+
+		document.forms['nodeadd'].elements['nodedata[passwd]'].value = passwd.join("");
+	}
+
+	function newmac()
+	{
+		var macscountelem = document.getElementById('macscount');
+		var nr = macscountelem.value;
+		var lastmacelem = document.getElementById('mac' + (nr - 1));
+		var newrow = lastmacelem.parentNode.insertRow(lastmacelem.rowIndex + 1);
+		newrow.id = 'mac' + nr;
+		var newcell = newrow.insertCell(0);
+		newcell.style.width = '100%';
+		newcell.innerHTML = '<INPUT TYPE="TEXT" NAME="nodedata[macs][' + nr + ']" VALUE=""'
+			+ ' onmouseover="popup(\'{trans("Enter MAC address")}\')" onmouseout="pophide()">'
+			+ '<a href="javascript: void(0);" onClick="return macchoosewin(document.nodeadd.elements[\'nodedata[macs][' + nr + ']\']);"'
+			+ ' onmouseover="popup(\'{trans("Click to select MAC from the list")}\')" onmouseout="pophide()">&nbsp;&raquo;&raquo;&raquo;</A>';
+		macscountelem.value = parseInt(nr) + 1;
+	}
+
+	function reset_customer()
+	{
+		var val;
+		if (val = document.forms['nodeadd'].elements['nodedata[ownerid]'].value)
+			document.forms['nodeadd'].elements['nodedata[customerid]'].value = val;
+	}
+
+	check_teryt('location', true);
+
+        function setnamefromip(ip)
+        {
+                if( !ip.length ) return false;
+                var part = ip.split(".");
+                if((part[0] == 10) && (part[1]== 10))
+                        document.forms['nodeadd'].elements['nodedata[name]'].value = "STB-" + part[1] + "-" + part[2] + "-" + part[3];
+                else if((part[0] == 10) && (part[1]== 99))
+                        document.forms['nodeadd'].elements['nodedata[name]'].value = "VOIP-" + part[1] + "-" + part[2] + "-" + part[3];
+                else
+                        document.forms['nodeadd'].elements['nodedata[name]'].value = "PC-" + part[1] + "-" + part[2] + "-" + part[3];
+        }
 //-->
 </SCRIPT>
