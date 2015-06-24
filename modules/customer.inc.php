@@ -231,7 +231,7 @@ $all=count($sth);
 
 foreach ($customernodes as $key => $val)
 {
-$sth= $DB->GetOne('SELECT ipaddr FROM nodes WHERE ownerid = 0 AND netdev=?', array($val['netid']));
+$sth= $DB->GetOne('SELECT ipaddr FROM nodes WHERE ownerid = 0 AND netdev=?', array($val['netdev']));
 
 $customernodes[$key]['sw']=long2ip($sth);
 
