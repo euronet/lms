@@ -164,7 +164,7 @@ if (isset($_POST['nodedata']))
 			                AND (CASE src WHEN ? THEN srcport ELSE dstport END) = ?',
 			                array($nodedata['netdev'], $nodedata['netdev'], $nodedata['netdev'], $nodedata['port'])))
 			{
-			        $error['port'] = trans('Selected port number is taken by other device or node!');
+			        //$error['port'] = trans('Selected port number is taken by other device or node!');
 			}
 		}
 	}
