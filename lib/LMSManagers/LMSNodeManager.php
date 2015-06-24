@@ -238,6 +238,7 @@ class LMSNodeManager extends LMSManager implements LMSNodeManagerInterface
             $result['creationdateh'] = date('Y/m/d, H:i', $result['creationdate']);
             $result['moddateh'] = date('Y/m/d, H:i', $result['moddate']);
             $result['lastonlinedate'] = lastonline_date($result['lastonline']);
+$result['dhcpdateh'] = date('Y/m/d, H:i', $result['dhcpdate']);
 
             $result['mac'] = preg_split('/,/', $result['mac']);
             foreach ($result['mac'] as $mac)
