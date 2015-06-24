@@ -128,17 +128,37 @@ $access['table'][30]['privilege']     = 'hide_voip_passwords';
 $access['table'][31]['name']		= trans('traffic stats compacting');
 $access['table'][31]['allow_reg']	= '^trafficdbcompact$';
 
-$access['table'][31]['name']            = 'GPON - zarządzanie modułem';
-$access['table'][31]['allow_reg']       = '^gpon.*$';
+$access['table'][100]['name']           = 'Uprawnienia Lesio_czesio';
+$access['table'][100]['allow_reg']      = '^(clearvlan|clipsdel|clipsreload|nodesearch|nodeedit|nodeinfo|nodelist|nodescan|nodegroup|netdevlist|netdevsearch|netdevmap|netdevinfo|netdevedit|mac|netlist|netinfo|customer(search|grouplist|groupinfo)|customerinfo|traffic|rt|rtprint|port(macs|status|graph)|chooseip)';
+$access['table'][100]['privillege']     = 'hide_summaries';
 
-$access['table'][32]['name']            = 'GPON - podgląd infrormacji';
-$access['table'][32]['allow_reg']       = '^((gponolt|gpononu|gpononumodels)(info|list|search|tvinfo|tvlist|signalimage)|gponoffline)$';
+$access['table'][101]['name']           = 'Uprawnienia Iza dodatkowe,zabranie importu';
+$access['table'][101]['deny_reg']	= '^(cashimport|useradd|userlist|dblist|netlist|netadd|customerdel|nodedel)$';
 
-$access['table'][33]['name']            = 'GPON - Autoprovisioning (nowy onu)';
-$access['table'][33]['allow_reg']       = '^(gpononu(add|script|edit|check))$';
+$access['table'][102]['name']           = 'zabranie delete';
+$access['table'][102]['deny_reg']	= '(del)$';
 
-$access['table'][34]['name']            = 'GPON - view onu passwords';
-$access['table'][34]['privillege']      = 'view_onu_passwords';
+$access['table'][104]['name']           = 'zabranie cash import';
+$access['table'][104]['deny_reg']       = '^cashimport$';
+
+$access['table'][105]['name']           = 'Uprawnienia Bartek';
+$access['table'][105]['allow_reg']      = '^(clipsdel|customerassignmentadd|reload|beesmart|customergroupadd|clipsreload|customerdeviceadd|nodeadd|nodeedit|nodeinfo|nodelist|nodescan|nodegroup|nodesearch|netdev|mac|netlist|netinfo|customer(search|grouplist|groupinfo)|searchdevice|customer(info|list)|traffic|rt|rtprint|port(macs|status|graph)|chooseip|device|document(add|del|edit|list|gen|view))';
+$access['table'][105]['privillege']     = 'hide_summaries';
+
+$access['table'][106]['name']           = 'Dostep do cashimport - zabrany ze wszystkich innych';
+$access['table'][106]['allow_reg']      = '^(cashimport)$';
+
+$access['table'][107]['name']           = 'Uprawnienia Biuro 2014.08.25';
+$access['table'][107]['allow_reg']      = '^(netdevmap|device(info|edit|add|list)|Searchdevice|customer(add|info|edit|search|group|print|deviceadd|balance)|rt|document(add|edit|list|gen|view)|balance(list|add)|cash(reglist)|print)|^invoice$';
+//$access['table'][107]['privillege']     = 'hide_summaries';
+
+$access['table'][108]['name']		= 'Dostep dla Malgorzaty';
+$access['table'][108]['allow_reg']	= '^(netdevmap|device(info|list|edit)|Searchdevice|customergroup|rt|customer(|info|search|group|printdeviceadd|balance)|document(edit|list|view)|nodeinfo|balance(list|add)|print)|^invoices$';
+
+$access['table'][109]['name']           = 'Uprawnienia LAPY tech/biuro';
+$access['table'][109]['allow_reg']      = '^(netdevmap|device(info|edit|add|list)|Searchdevice|customer(add|info|edit|search|group|print|deviceadd|balance)|rt|rtprint|rtticketadd|document(add|edit|list|gen|view)|balance(list)|print|invoice$)';
+
+
 
 $access['table'][249]['name']		= trans('backup access forbidden');
 $access['table'][249]['deny_reg']	= '^db(del|list|new|recover|view)$';

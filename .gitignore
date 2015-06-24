@@ -9,7 +9,8 @@ documents/*
 cache/*
 contrib/LMS2Nagios-php/generated/*
 lib/teryt/*
-
+index.php
+userpanel/index.php
 # Temporary files
 *~
 *.swp
