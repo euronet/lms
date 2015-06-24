@@ -113,7 +113,7 @@ if($_GET['ext'] == 1) {
 }
 
 	
-putenv('LC_TIME=pl_PL.UTF-8');
+
 $cmd = $rrdtool . ' graph - ' . implode(" ", $opts);
 $imgstring = shell_exec($cmd);
 $source = imagecreatefromstring($imgstring);
