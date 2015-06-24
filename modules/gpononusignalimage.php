@@ -1,4 +1,5 @@
 <?php
+
 $CONFIG['directories']['rrd_dir'] = (!isset($CONFIG['directories']['rrd_dir']) ? $CONFIG['directories']['sys_dir'].'/rrd' : $CONFIG['directories']['rrd_dir']);
 
 define('RRD_DIR', $CONFIG['directories']['rrd_dir']);
@@ -13,13 +14,14 @@ $filerrd = RRD_DIR."/signal_onu_". $_REQUEST['id']. ".rrd";
 
 if (!file_exists($filerrd))
 	die;
+
 $period = isset($_GET['period']) ? $_GET['period'] : '7d';
 if (!preg_match('/^[0-9]+d$/', $period))
 	$period = '7d';
 
-$titles = array("7d" => "tydzień",
-	    "60d" => "2 miesiące",
-	    "730d" => "2 lata");
+$titles = array("7d" => "week",
+	    "60d" => "2 month",
+	    "730d" => "2 year");
 $timestamp = "now-".$period;
 $title = $titles[$period];
 
@@ -137,5 +139,5 @@ else
 }
 
 imagedestroy($source);
-$SMARTY->assign('cmd',$cmd);
+
 ?>
