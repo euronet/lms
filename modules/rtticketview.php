@@ -91,7 +91,12 @@ $categories = $ncategories;
 $layout['pagetitle'] = trans('Ticket Review: $a',sprintf("%06d", $ticket['ticketid']));
 
 $SESSION->save('backto', $_SERVER['QUERY_STRING']);
+ $sth    = $DB->GetAll('SELECT phone, name FROM customercontacts WHERE customerid=?', array($ticket['customerid']));
+ $how=count($sth);
 
+
+$SMARTY->assign('phone', $sth); 
+$SMARTY->assign('how', $how);
 $SMARTY->assign('ticket', $ticket);
 $SMARTY->assign('categories', $categories);
 $SMARTY->display('rt/rtticketview.html');

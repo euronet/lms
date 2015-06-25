@@ -99,6 +99,22 @@
 									{/foreach}
 								</TD>
 							</TR>
+<TR>
+		    <TD WIDTH="1%" NOWRAP>
+		    	<IMG src="img/phone.gif" alt="">
+			<B>{trans("Phone:")}</B>
+		    </TD>
+		    <TD WIDTH="99%">
+			{if $how < 1}
+			Brak telefonu kontaktowego
+			{else}
+{section name=i loop=$phone}
+ {$phone[i].phone|wordwrap:3:" ":true} {$phone[i].name} <br>
+{/section}
+
+			{/if}	
+		    </TD>
+		</TR>
 						</TABLE>
 					</TD>
 					<TD style="width: 50%;" class="valign-top">
