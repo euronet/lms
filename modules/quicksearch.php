@@ -78,6 +78,11 @@ if(!empty($_POST['qscustomer'])) {
 	$search = urldecode(trim($_GET['what']));
 	$mode = $_GET['mode'];
 }
+elseif(!empty($_POST['clips'])) {
+	$mode = 'clips';
+}
+
+
 
 $sql_search = $DB->Escape("%$search%");
 
@@ -86,12 +91,13 @@ switch($mode)
 	case 'customer':
 		if(isset($_GET['ajax'])) // support for AutoSuggest
 		{
-			$candidates = $DB->GetAll("SELECT id, email, address, post_name, post_address, deleted,
+			$candidates = $DB->GetAll("SELECT id, email, address, rbe, post_name, post_address, deleted,
 			    ".$DB->Concat('UPPER(lastname)',"' '",'name')." AS username
 				FROM customersview
 				WHERE ".(preg_match('/^[0-9]+$/', $search) ? 'id = '.intval($search).' OR ' : '')."
 					LOWER(".$DB->Concat('lastname',"' '",'name').") ?LIKE? LOWER($sql_search)
 					OR LOWER(address) ?LIKE? LOWER($sql_search)
+					OR LOWER(rbe) ?LIKE? LOWER($sql_search)
 					OR LOWER(post_name) ?LIKE? LOWER($sql_search)
 					OR LOWER(post_address) ?LIKE? LOWER($sql_search)
 					OR LOWER(email) ?LIKE? LOWER($sql_search)
@@ -117,6 +123,11 @@ switch($mode)
 				    $descriptions[$row['id']] = escape_js(trans('Address:').' '.$row['address']);
 				    continue;
 				}
+elseif (preg_match("~$search~i",$row['rbe'])) {
+				    $descriptions[$row['id']] = escape_js(trans('Address:').' '.$row['rbe']);
+				    continue;
+				}
+
 				else if (preg_match("~$search~i",$row['post_name'])) {
 				    $descriptions[$row['id']] = escape_js(trans('Name:').' '.$row['post_name']);
 				    continue;
@@ -450,7 +461,14 @@ switch($mode)
 */
 			$target = '?m=customerinfo&id=' . $cid;
 		}
+
 	break;
+
+         case 'clips':
+          $s['serialnumber'] = $_POST['clips'];
+        $username = trim(strtolower($s['serialnumber']));
+        passthru("/usr/bin/expect /etc/lms/lms_dodatki/2014.05.03/eryk.usun.subs " . $username . " >> /tmp/eryk.txt");
+        break;
 }
 
 $SESSION->redirect(!empty($target) ? $target : '?'.$SESSION->get('backto'));
