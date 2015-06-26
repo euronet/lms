@@ -174,7 +174,7 @@
 			<IMG SRC="img/phone.gif" ALT="">
 		</TD>
 		<TD WIDTH="99%">
-			{$item.phone}
+			{$item.phone|wordwrap:3:" ":true}
 			{if $item.typestr}[{$item.typestr}]{/if}
 			{if $item.name} ({$item.name|truncate:"40":"...":true}){/if}
 		</TD>
