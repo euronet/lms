@@ -407,7 +407,7 @@ function invoice_buyer() {
 	$pdf->writeHTMLCell(80, '', 125, 50, $postbox, 0, 1, 0, true, 'L');
 
 	$pin = '<b>' . trans('Customer ID: $a', sprintf('%04d', $invoice['customerid'])) . '</b><br>';
-	$pin .= '<b>PIN: ' . sprintf('%04d', $invoice['customerpin']) . '</b><br>';
+	//$pin .= '<b>PIN: ' . sprintf('%04d', $invoice['customerpin']) . '</b><br>';
 
 	$pdf->SetFont('arial', 'B', 8);
 	$pdf->writeHTMLCell('', '', 125, $oldy + round(($y - $oldy) / 2), $pin, 0, 1, 0, true, 'L');
