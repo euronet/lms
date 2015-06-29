@@ -52,7 +52,6 @@
 		<TD style="width: 100%;" colspan="2">
 			<TABLE>
 				<TR>
-
 					<TD class="bold">
 						{trans("Name/Surname:")}
 					</TD>
@@ -115,17 +114,13 @@
 						<INPUT type="radio" name="customeradd[type]" value="1" id="company" {tip text="Select legal personality type" trigger="type"}{if $customeradd.type == $smarty.const.CTYPES_COMPANY} CHECKED{/if}><label for="company">{assign var='type' value=$smarty.const.CTYPES_COMPANY}{$_CTYPES.$type}</label>
 					</TD>
 				</TR>
-<TR>
-		<TD style="width: 1%;">
-			<IMG src="img/node.gif" alt="">
-		</TD>
-		<TD style="width: 99%;" class="nobr">
-		<INPUT type="text" value="{$customerinfo.rbe}" name="customerdata[rbe]" size="30" {tip text="Enter National Court Register / Register of Business Entities Number (optional)" trigger="rbe"}>
-		</TD>
-	</TR>
-
-
 				<TR>
+                                    <TR>
+								<TD style="width: 1%;" class="nobr"><IMG src="img/node.gif" alt=""></TD>
+								<TD style="width: 99%;">
+									<INPUT type="text" size="30" value="{$customeradd.rbe}" name="customeradd[rbe]" {tip text="Enter National Court Register / Register of Business Entities Number (optional)" trigger="rbe"}>
+								</TD>
+							</TR>
 					<TD style="width: 1%;" class="valign-top">
 						<IMG src="img/home.gif" alt="">
 					</TD>
@@ -343,7 +338,8 @@
 									<INPUT type="text" size="30" value="{$customeradd.regon}" name="customeradd[regon]" {tip text="Enter Business Registration Number (optional)" trigger="regon"}>
 								</TD>
 							</TR>
-													</TABLE>
+							
+						</TABLE>
 					</TD>
 				</TR>
 				<TR>
