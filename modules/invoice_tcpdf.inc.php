@@ -481,7 +481,8 @@ function invoice_footnote() {
 		$pdf->SetFont('arial', '', 8);
 		$h = $pdf->getStringHeight(0, $tmp);
 		$tmp = mb_ereg_replace('\r?\n', '<br>', $tmp);
-		$pdf->writeHTMLCell(0, 0, '', 188 - $h, $tmp, 0, 1, 0, true, 'C');
+		// $pdf->writeHTMLCell(0, 0, '', 188 - $h, $tmp, 0, 1, 0, true, 'C');
+		$pdf->writeHTMLCell(0, 0, '', '', $tmp, 0, 1, 0, true, 'C');
 	}
 }
 
