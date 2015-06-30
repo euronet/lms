@@ -125,7 +125,7 @@
 			{if $queue[ticket].customerid}
 				<span {tip a=$queue[ticket].customerid dynpopup='?m=nodelistshort&id=$a'}>
 				{$queue[ticket].requestor|escape|truncate:"60":"..."}
-				({$queue[ticket].address})
+				({if $queue[ticket].rbe != ''}{$queue[ticket].rbe}{else}{$queue[ticket].address}{/if})
 				</span>
 			{else}
 				{$queue[ticket].requestor|escape}
