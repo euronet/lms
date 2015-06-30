@@ -94,7 +94,7 @@ class LMSHelpdeskManager extends LMSManager implements LMSHelpdeskManagerInterfa
         }
 
         if ($result = $this->db->GetAll(
-                'SELECT DISTINCT t.id, t.customerid, c.address, users.name AS ownername,
+                'SELECT DISTINCT t.id, t.customerid, c.address, c.rbe, users.name AS ownername,
 			    t.subject, state, owner AS ownerid, t.requestor AS req,
 			    CASE WHEN customerid = 0 THEN t.requestor ELSE '
                 . $this->db->Concat('c.lastname', "' '", 'c.name') . ' END AS requestor, 
