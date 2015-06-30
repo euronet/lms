@@ -58,6 +58,14 @@
 	{
 		location.href = document.getElementById('newdocselect').value;
 	}
+         function send_doc()
+	{
+		var add = "";
+                if (document.addbalance.duplicate.checked)
+                    add += "&duplicate=1";
+                document.addbalance.action = "?m=documentsend" + add +"&print=cached";
+                $("#addbalance").submit();
+        }
 
 {if ConfigHelper::checkConfig('phpui.delete_link_in_customerbalancebox')}
 	function delpos()
@@ -74,7 +82,7 @@
 </SCRIPT>
 {$default_printpage = ConfigHelper::getConfig('invoices.default_printpage')}
 {$default_taxrate   = ConfigHelper::getConfig('phpui.default_taxrate')}
-<FORM name="addbalance" method="POST" action="?m=balanceadd&amp;id={$balancelist.customerid}">
+<FORM id="addbalance" name="addbalance" method="POST" action="?m=balanceadd&amp;id={$balancelist.customerid}">
 <p style="display: none;">
 <INPUT type="submit" class="hiddenbtn">
 </p>
@@ -175,9 +183,12 @@
 							<INPUT type="checkbox" name="original" id="inv-original"{if preg_match('/original/i', $default_printpage)} checked{/if}> <label for="inv-original">{trans("original")}</label>
 							<INPUT type="checkbox" name="copy" id="inv-copy"{if preg_match('/copy/i', $default_printpage)} checked{/if}> <label for="inv-copy">{trans("copy")}</label>
 							<INPUT type="checkbox" name="duplicate" id="inv-duplicate"{if preg_match('/duplicate/i', $default_printpage)} checked{/if}> <label for="inv-duplicate">{trans("duplicate")}</label>
+| {trans("Send")}:
+							<A href="javascript:send_doc();">{trans("document")} <IMG src="img/mail.gif" alt=""></A>&nbsp;
 							</TD><TD style="width: 1%;" class="text-right nobr">
 							<label for="allboxb">{trans("Check All")}</label><INPUT type="checkbox" NAME="allbox" id="allboxb" onchange="CheckAll('addbalance', this, ['copy', 'original', 'duplicate'])" value="1">
 							</TD></TR>
+
 						</TABLE>
 					</TD>
 				</TR>
@@ -192,7 +203,7 @@
 						{$layout.logname|truncate:16:"...":true}
 					</TD>
 					<TD class="ftop nobr" colspan="2">
-						<INPUT type="text" size="8" name="addbalance[value]" accesskey="s" {if $value}value="{$value}"{/if} {tip text="Enter transaction value"}>&nbsp;
+						<INPUT type="text" size="8" name="addbalance[value]" accesskey="s" {tip text="Enter transaction value"}>&nbsp;
 						<SELECT SIZE="1" name="addbalance[taxid]" {tip text="Select Tax value"}>
 							{foreach item=tax from=$taxeslist}
 							<OPTION value="{$tax.id}" {if ($taxid && $tax.id == $taxid) || (!$taxid && $tax.value == $default_taxrate)}selected{/if}>{$tax.label}</OPTION>
@@ -242,4 +253,33 @@ if (getCookie('customerbalance') == '0')
 }
 {/if}
 //-->
+$(document).ready(function() {
+    $("#addbalance").submit(function(e)
+    {
+alert('dziala');
+        var postData = $(this).serializeArray();
+        var formURL = $(this).attr("action");
+        $("#Loader").show();
+        $.ajax(
+        {
+            url : formURL,
+            type: "POST",
+            data : postData,
+            success:function(data, textStatus, jqXHR)
+            {
+                //data: return data from server
+                $("#Loader").hide();
+                alert(data);
+            },
+            error: function(jqXHR, textStatus, errorThrown)
+            {
+                //if fails
+            }
+        });
+        e.preventDefault(); //STOP default action
+    });
+});
+//-->
 </SCRIPT>
+
+
